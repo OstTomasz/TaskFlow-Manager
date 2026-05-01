@@ -1,5 +1,5 @@
 {
-  "name": "taskflow",
+  "name": "@taskflow/client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,12 +12,19 @@
   "dependencies": {
     "@headlessui/react": "^2.2.10",
     "@tailwindcss/vite": "^4.2.4",
+    "@tanstack/react-query": "^5.100.6",
+    "@tanstack/react-query-devtools": "^5.100.6",
+    "@taskflow/shared": "workspace:*",
+    "axios": "^1.15.2",
     "clsx": "^2.1.1",
     "headlessui": "^0.0.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "react-router-dom": "^7.14.2",
     "tailwind-merge": "^3.5.0",
-    "tailwindcss": "^4.2.4"
+    "tailwindcss": "^4.2.4",
+    "zod": "^4.4.1",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
