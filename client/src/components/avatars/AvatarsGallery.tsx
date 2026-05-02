@@ -8,7 +8,7 @@ interface AvatarsGalleryProps {
 
 export const AvatarsGallery = ({ onSelect, selected }: AvatarsGalleryProps) => {
   return (
-    <div className="flex gap-2 p-2">
+    <div className="flex gap-(--space-sm) p-(--space-sm)">
       {avatars.map((avatar) => (
         <button
           key={avatar.id}

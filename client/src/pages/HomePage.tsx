@@ -8,8 +8,8 @@ export const HomePage = () => {
       <main className="h-full flex flex-col justify-around items-center">
         <h2>Identify Yourself</h2>
         {/* User List */}
-        <div className="flex gap-1 p-5">
-          <div className="flex flex-col items-center border border-black p-1s">
+        <div className="flex gap-(--space-sm) p-(--space-md)">
+          <div className="flex flex-col items-center border border-black p-1">
             <img src="" alt="user avatar" />
             <h3>Name</h3>
             <form className="flex flex-col">

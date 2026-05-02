@@ -21,8 +21,8 @@ export const ThemeToggler = () => {
       checked={theme === "dark"}
       onChange={handleChange}
       className={cn(
-        "relative inline-flex h-8 w-16 items-center rounded-full border-2 border-ink transition-colors",
-        theme === "dark" ? "bg-navy-2" : "bg-cream",
+        "relative inline-flex h-8 w-16 items-center rounded-full border-2 transition-colors",
+        theme === "dark" ? "bg-navy-2 border-cream" : "bg-cream border-ink",
       )}
       aria-label={
         theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
