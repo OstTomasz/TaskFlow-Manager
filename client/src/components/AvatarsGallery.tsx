@@ -1,5 +1,4 @@
-import { avatars } from "./source";
-import type { AvatarId } from "./source";
+import { avatars, type AvatarId } from "@/constants";
 
 interface AvatarsGalleryProps {
   onSelect: (id: AvatarId) => void;

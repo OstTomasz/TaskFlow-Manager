@@ -6,12 +6,15 @@ import { BrowserRouter } from "react-router-dom";
 import { queryClient } from "./lib/queryClient";
 import { App } from "./App";
 import "./index.css";
+import { Layout } from "./components";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <App />
+        <Layout>
+          <App />
+        </Layout>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </BrowserRouter>

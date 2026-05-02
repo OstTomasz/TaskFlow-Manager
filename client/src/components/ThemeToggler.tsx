@@ -22,7 +22,7 @@ export const ThemeToggler = () => {
       onChange={handleChange}
       className={cn(
         "relative inline-flex h-8 w-16 items-center rounded-full border-2 transition-colors",
-        theme === "dark" ? "bg-navy-2 border-cream" : "bg-cream border-ink",
+        theme === "dark" ? "bg-navy border-cream" : "bg-cream border-ink",
       )}
       aria-label={
         theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
