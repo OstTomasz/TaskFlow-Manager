@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import { HomePage } from "./pages/HomePage";
-// import { ProtectedRoute } from "./components/ProtectedRoute";
-import { TodosPage } from "./pages/TodosPage";
+import { HomePage, TodosPage } from "./pages";
+// import { ProtectedRoute } from "./components";
 
 export const App = () => {
   return (

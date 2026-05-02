@@ -1,1 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Josefin+Sans:wght@400;500&display=swap");
 @import "tailwindcss";
+
+@theme {
+  --font-heading: "Fredoka", sans-serif;
+  --font-body: "Josefin Sans", sans-serif;
+
+  --color-ink: #1a1a2e;
+  --color-cream: #f5f0e8;
+  --color-white: #ffffff;
+  --color-amber: #f5a623;
+  --color-red: #e84855;
+  --color-teal: #3d9e75;
+  --color-blue: #3d6b9e;
+  --color-purple: #9b59b6;
+
+  --color-navy: #1a2233;
+  --color-navy-2: #243044;
+  --color-slate: #4a6080;
+
+  --shadow-comic: 3px 3px 0 var(--color-ink);
+  --shadow-comic-dark: 3px 3px 0 #0a1020;
+  --shadow-comic-sm: 2px 2px 0 var(--color-ink);
+}
+
+@layer base {
+  :root {
+    --bg-primary: var(--color-cream);
+    --bg-surface: var(--color-white);
+    --bg-elevated: var(--color-white);
+    --text-primary: var(--color-ink);
+    --text-muted: #4a4a5a;
+    --border-color: var(--color-ink);
+    --border-width: 2.5px;
+    --shadow: var(--shadow-comic);
+  }
+
+  .dark {
+    --bg-primary: var(--color-navy);
+    --bg-surface: var(--color-navy-2);
+    --bg-elevated: #2d3d54;
+    --text-primary: #e8e0d0;
+    --text-muted: #8a9bb0;
+    --border-color: var(--color-slate);
+    --shadow: var(--shadow-comic-dark);
+  }
+
+  * {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .comic-card {
+    background: var(--bg-surface);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  .comic-btn {
+    font-family: var(--font-body);
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: var(--shadow-comic-sm);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  .comic-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+
+  .comic-btn-primary {
+    background: var(--color-amber);
+    color: var(--color-ink);
+  }
+
+  .comic-btn-ghost {
+    background: transparent;
+    color: var(--text-primary);
+  }
+
+  .comic-input {
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: var(--border-width) solid var(--border-color);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    outline: none;
+    box-shadow: var(--shadow-comic-sm);
+    width: 100%;
+  }
+
+  .comic-input:focus {
+    box-shadow: var(--shadow-comic);
+  }
+
+  .badge {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 2px solid var(--border-color);
+  }
+
+  .badge-low {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-color: #2e7d32;
+  }
+  .badge-medium {
+    background: #fff8e1;
+    color: #f57f17;
+    border-color: #f57f17;
+  }
+  .badge-high {
+    background: #fce4ec;
+    color: #c62828;
+    border-color: #c62828;
+  }
+  .badge-crucial {
+    background: var(--color-ink);
+    color: var(--color-amber);
+    border-color: var(--color-amber);
+  }
+
+  .badge-todo {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-color: #2e7d32;
+  }
+  .badge-in_progress {
+    background: #fff8e1;
+    color: #f57f17;
+    border-color: #f57f17;
+  }
+  .badge-done {
+    background: #e8eaf6;
+    color: #3949ab;
+    border-color: #3949ab;
+  }
+}

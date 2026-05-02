@@ -1,3 +1,5 @@
+import { Footer } from "@/components";
+
 export const HomePage = () => {
   return (
     <>
@@ -45,9 +47,7 @@ export const HomePage = () => {
         </div>
       </main>
       {/* Footer - same content on both sites */}
-      <footer className="w-full fixed bottom-0 flex justify-center border-t border-t-black">
-        <p>Created by Tomasz Ostaszewski @2026. All right reserved</p>
-      </footer>
+      <Footer />
     </>
   );
 };
