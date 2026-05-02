@@ -1,14 +1,9 @@
-import { Footer } from "@/components";
-import { ThemeToggler } from "@/components/ui/ThemeToggler";
+import { Footer, Topbar } from "@/components";
 
 export const HomePage = () => {
   return (
     <>
-      {/* Topbar - showing on both sites, diff content */}
-      <header className="w-full flex py-4 border-b border-b-black">
-        <h1 className="text-5xl justify-self-center">Task List Manager</h1>
-        <ThemeToggler />
-      </header>
+      <Topbar />
       {/* Content */}
       <main className="h-full flex flex-col justify-around items-center">
         <h2>Identify Yourself</h2>

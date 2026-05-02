@@ -1,16 +1,10 @@
+import { Footer, Topbar } from "@/components";
+
 export const TodosPage = () => {
   return (
     <>
-      {/* Topbar - showing on both sites, diff content */}
-      <header className="w-full flex py-4 border-b border-b-black">
-        <h1 className="text-5xl justify-self-center">Task List Manager</h1>
-        <button className="justify-self-end">theme toogler</button>
-        {/* On mobile */}
-        <button>Burger</button>
-        {/* On other */}
-        <button>Settings</button>
-        <button>Logout</button>
-      </header>
+      <Topbar />
+
       {/* Content */}
       <main className="h-full flex flex-col justify-around items-center">
         {/* Task List */}
@@ -36,9 +30,7 @@ export const TodosPage = () => {
         </div>
       </main>
       {/* Footer - same content on both sites */}
-      <footer className="w-full fixed bottom-0 flex justify-center border-t border-t-black">
-        <p>Created by Tomasz Ostaszewski @2026. All right reserved</p>
-      </footer>
+      <Footer />
     </>
   );
 };

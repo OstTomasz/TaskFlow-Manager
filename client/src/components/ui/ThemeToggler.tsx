@@ -21,7 +21,7 @@ export const ThemeToggler = () => {
       checked={theme === "dark"}
       onChange={handleChange}
       className={cn(
-        "relative inline-flex h-8 w-20 items-center rounded-full border-2 border-ink transition-colors cursor-pointer",
+        "relative inline-flex h-8 w-16 items-center rounded-full border-2 border-ink transition-colors",
         theme === "dark" ? "bg-navy-2" : "bg-cream",
       )}
       aria-label={
@@ -31,7 +31,7 @@ export const ThemeToggler = () => {
       <span
         className={cn(
           "inline-block h-6 w-6 rounded-full transition-transform duration-300",
-          theme === "dark" ? "translate-x-8" : "translate-x-1",
+          theme === "dark" ? "translate-x-7" : "translate-x-1",
         )}
       >
         {icon}
