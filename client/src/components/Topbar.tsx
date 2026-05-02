@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { LogOut, Menu, Settings } from "lucide-react";
-import { MobileMenu, ThemeToggler } from "@/components";
+import { MobileMenu, ThemeToggler, SettingsModal } from "@/components";
 import { useLogout } from "@/hooks/useLogout";
 
 export const Topbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const { pathname } = useLocation();
   const isLogged = pathname !== "/";
 
@@ -13,7 +14,11 @@ export const Topbar = () => {
 
   const handleLogout = () => {
     logout();
-    setIsOpen(false);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleSettingsOpen = () => {
+    setIsSettingsModalOpen(true);
   };
 
   return (
@@ -22,12 +27,15 @@ export const Topbar = () => {
       {isLogged ? (
         <div>
           <div className="flex justify-end">
-            <button className="md:hidden" onClick={() => setIsOpen(true)}>
+            <button
+              className="md:hidden"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
               <Menu />
             </button>
             <div className="hidden md:flex gap-(--space-sm) justify-center items-center">
               <ThemeToggler />
-              <button>
+              <button onClick={handleSettingsOpen}>
                 <Settings />
               </button>
               <button onClick={handleLogout}>
@@ -35,13 +43,21 @@ export const Topbar = () => {
               </button>
             </div>
           </div>
-          <MobileMenu isOpen={isOpen} handleClose={() => setIsOpen(false)} />
+          <MobileMenu
+            isOpen={isMobileMenuOpen}
+            handleClose={() => setIsMobileMenuOpen(false)}
+            handleSettingsOpen={handleSettingsOpen}
+          />
         </div>
       ) : (
         <div className="flex justify-end">
           <ThemeToggler />
         </div>
       )}
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        handleClose={() => setIsSettingsModalOpen(false)}
+      />
     </header>
   );
 };

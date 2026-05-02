@@ -1,4 +1,4 @@
-import { Dialog, DialogPanel, TransitionChild } from "@headlessui/react";
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { LogOut, Settings, X } from "lucide-react";
 import { ThemeToggler } from "./ThemeToggler";
 import { useLogout } from "@/hooks/useLogout";
@@ -6,9 +6,14 @@ import { useLogout } from "@/hooks/useLogout";
 interface MobileMenuProps {
   isOpen: boolean;
   handleClose: () => void;
+  handleSettingsOpen: () => void;
 }
 
-export const MobileMenu = ({ isOpen, handleClose }: MobileMenuProps) => {
+export const MobileMenu = ({
+  isOpen,
+  handleClose,
+  handleSettingsOpen,
+}: MobileMenuProps) => {
   const logout = useLogout();
 
   const handleLogout = () => {
@@ -18,14 +23,12 @@ export const MobileMenu = ({ isOpen, handleClose }: MobileMenuProps) => {
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
-      <TransitionChild>
-        <div
-          className="fixed inset-0 bg-ink/30 backdrop-blur-sm
-  transition duration-300 ease-in-out
-  data-closed:opacity-0"
-          aria-hidden="true"
-        />
-      </TransitionChild>
+      <DialogBackdrop
+        transition
+        className="fixed inset-0 bg-ink/30 backdrop-blur-sm
+      transition duration-300 ease-in-out
+      data-closed:opacity-0"
+      />
       <DialogPanel
         transition
         className="fixed top-0 right-0 w-48 rounded-bl-xl
@@ -37,7 +40,10 @@ data-closed:-translate-y-full     data-closed:translate-x-full"
           <X />
         </button>
         <div className="flex flex-col gap-(--space-md) mt-(--space-xl) ml-(--space-sm) mb-(--space-sm)">
-          <button className="flex gap-(--space-sm)">
+          <button
+            className="flex gap-(--space-sm)"
+            onClick={handleSettingsOpen}
+          >
             <Settings /> Settings
           </button>
           <button className="flex gap-(--space-sm)" onClick={handleLogout}>

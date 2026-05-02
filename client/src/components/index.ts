@@ -5,3 +5,4 @@ export { ProtectedRoute } from "./ProtectedRoute";
 export { ThemeToggler } from "./ThemeToggler";
 export { AvatarsGallery } from "./AvatarsGallery";
 export { MobileMenu } from "./MobileMenu";
+export { SettingsModal } from "./SettingsModal";
