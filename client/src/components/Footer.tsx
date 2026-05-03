@@ -3,7 +3,7 @@ import { LINKEDIN_URL } from "@/constants";
 const currentYear = new Date().getFullYear();
 export const Footer = () => {
   return (
-    <footer className="w-full fixed bottom-0 flex flex-col items-center border-t py-(--space-sm) md:flex-row md:mx-auto md:gap-1 md:justify-center">
+    <footer className="w-full sticky bottom-0 bg-(--bg-primary) flex flex-col items-center border-t py-(--space-sm) md:flex-row md:mx-auto md:gap-1 md:justify-center">
       <p>
         &copy; Created by{" "}
         <a

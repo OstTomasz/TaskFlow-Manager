@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,50 +36,83 @@ export const UserCard = ({ user }: { user: User }) => {
 
   const avatarIcon = avatars.find((a) => a.id === user.avatar)?.icon;
 
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const { ref, ...rest } = register("password");
+
+  useEffect(() => {
+    if (isExpanded) {
+      const timer = setTimeout(() => passwordRef.current?.focus(), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isExpanded]);
+
   return (
-    <div
+    <li
       onClick={handleUserClick}
-      className={cn("cursor-pointer comic-card", shaking && "animate-shake")}
+      className={cn(
+        "cursor-pointer comic-card w-60 h-60 flex flex-col items-center overflow-hidden pt-4",
+        shaking && "animate-shake",
+      )}
       onAnimationEnd={() => setShaking(false)}
     >
-      <div>
-        <svg className="w-20 h-20" viewBox="0 0 150 150">
-          <use href={avatarIcon} />
-        </svg>
-        <h3 className="text-center text-2xl font-bold mb-(--space-sm)">
-          {user.name}
-        </h3>
-        {isExpanded ? (
-          <form
-            onSubmit={handleSubmit(handleLogin)}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <input
-              {...register("password")}
-              autoFocus
-              placeholder="enter password"
-              type="password"
-              className="comic-input"
-            ></input>
-            <p className="text-sm text-error min-h-[1.2rem]">
-              {errors.password?.message}
-            </p>
-            <button
-              type="submit"
-              className="comic-btn comic-btn-primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <span className="flex items-center gap-1">
-                  <Loader className="animate-spin" /> Logging..
-                </span>
-              ) : (
-                "Login"
-              )}
-            </button>
-          </form>
-        ) : null}
-      </div>
-    </div>
+      <svg
+        className={cn(
+          "w-30 h-30 transition-all duration-500 shrink-0 mb-(--space-sm)",
+          isExpanded
+            ? "-translate-y-full opacity-0 -mt-30"
+            : "translate-y-0 opacity-100 mt-0",
+        )}
+        viewBox="0 0 150 150"
+      >
+        <use href={avatarIcon} />
+      </svg>
+
+      <h3
+        className={cn(
+          "text-center text-3xl font-bold transition-all duration-500",
+          isExpanded ? "-translate-y-1.5" : "translate-y-0 my-2",
+        )}
+      >
+        {user.name}
+      </h3>
+
+      <form
+        onSubmit={handleSubmit(handleLogin)}
+        onClick={(e) => e.stopPropagation()}
+        className={cn(
+          "flex flex-col w-full px-4 transition-all duration-500",
+          isExpanded
+            ? "translate-y-5 opacity-100"
+            : "translate-y-full opacity-0",
+        )}
+      >
+        <input
+          {...rest}
+          placeholder="enter password"
+          ref={(el) => {
+            ref(el);
+            passwordRef.current = el;
+          }}
+          type="password"
+          className="comic-input"
+        />
+        <p className="text-sm text-error min-h-[1.21rem] my-2">
+          {errors.password?.message}
+        </p>
+        <button
+          type="submit"
+          className="comic-btn comic-btn-primary"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <span className="flex items-center gap-1">
+              <Loader className="animate-spin" /> Logging..
+            </span>
+          ) : (
+            "Login"
+          )}
+        </button>
+      </form>
+    </li>
   );
 };

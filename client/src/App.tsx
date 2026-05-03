@@ -4,7 +4,7 @@ import { HomePage, TodosPage } from "./pages";
 
 export const App = () => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/todos" element={<TodosPage />} />
@@ -13,6 +13,6 @@ export const App = () => {
         </Route> */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </>
+    </div>
   );
 };

@@ -22,7 +22,7 @@ export const Topbar = () => {
   };
 
   return (
-    <header className="w-dvw grid grid-cols-[2fr_1fr] py-(--space-sm) border-b items-center px-(--space-sm)">
+    <header className="w-full grid grid-cols-[2fr_1fr] py-(--space-sm) border-b items-center px-(--space-sm)">
       <h1 className="text-center">Task List Manager</h1>
       {isLogged ? (
         <div>

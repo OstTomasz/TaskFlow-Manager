@@ -8,7 +8,7 @@ export const Layout = ({ children }: LayoutProps) => {
   return (
     <>
       <Topbar />
-      <main>{children}</main>
+      <main className="flex flex-col grow">{children}</main>
       <Footer />
     </>
   );
