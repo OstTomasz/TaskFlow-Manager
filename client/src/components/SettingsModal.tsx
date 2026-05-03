@@ -7,6 +7,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChangePasswordSchema, type ChangePassword } from "@taskflow/shared";
+import { Loader } from "lucide-react";
 
 interface SettingsProps {
   isOpen: boolean;
@@ -17,7 +18,8 @@ export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm<ChangePassword>({
     resolver: zodResolver(ChangePasswordSchema),
     mode: "onBlur",
@@ -26,10 +28,17 @@ export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
   const onSubmit = (data: ChangePassword) => {
     console.log(data);
     handleClose();
+    reset();
   };
 
   return (
-    <Dialog open={isOpen} onClose={handleClose}>
+    <Dialog
+      open={isOpen}
+      onClose={() => {
+        reset();
+        handleClose();
+      }}
+    >
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-ink/30 backdrop-blur-sm
@@ -81,8 +90,18 @@ export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
             {errors.confirmNewPassword?.message}
           </p>
 
-          <button type="submit" className="comic-btn comic-btn-primary">
-            Save
+          <button
+            type="submit"
+            className="comic-btn comic-btn-primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-1">
+                <Loader className="animate-spin" /> Saving...
+              </span>
+            ) : (
+              "Save"
+            )}
           </button>
         </form>
       </DialogPanel>
