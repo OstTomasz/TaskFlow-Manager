@@ -9,6 +9,12 @@ export const UserSchema = z.object({
 
 export type User = z.infer<typeof UserSchema>;
 
+export const LoginSchema = z.object({
+  password: z.string().min(4, "Password must be at least 4 characters"),
+});
+
+export type Login = z.infer<typeof LoginSchema>;
+
 export const ChangePasswordSchema = z
   .object({
     currentPassword: z
