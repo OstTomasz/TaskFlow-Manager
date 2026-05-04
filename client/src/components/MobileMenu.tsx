@@ -1,7 +1,7 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { LogOut, Settings, X } from "lucide-react";
 import { ThemeToggler } from "./ThemeToggler";
-import { useLogout } from "@/hooks/useLogout";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 
 interface MobileMenuProps {
   isOpen: boolean;

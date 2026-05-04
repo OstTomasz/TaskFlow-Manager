@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { LogOut, Menu, Settings } from "lucide-react";
 import { MobileMenu, ThemeToggler, SettingsModal } from "@/components";
-import { useLogout } from "@/hooks/useLogout";
+import { useLogout } from "@/features/auth/hooks/useLogout";
 
 export const Topbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
