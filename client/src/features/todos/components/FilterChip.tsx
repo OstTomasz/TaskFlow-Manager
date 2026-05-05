@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { formatLabel } from "../utils/todoFilters.utils";
 
 interface FilterChipProps {
   label: string;
@@ -16,7 +17,7 @@ export const FilterChip = ({ label, isActive, onToggle }: FilterChipProps) => {
         isActive ? `badge-${label}` : "comic-btn-ghost",
       )}
     >
-      {label}
+      {formatLabel(label)}
     </button>
   );
 };

@@ -1,29 +1,34 @@
 import { Layout } from "@/components";
 import { useTodos } from "@/features/todos/hooks/useTodos";
 import { useTodoFilters } from "@/features/todos/hooks/useTodoFilters";
-import { TodoFilters } from "@/features/todos/components/TodoFilters";
+import { FunnelPlus } from "lucide-react";
+import { TodoFilterDrawer } from "@/features/todos/components/TodoFilterDrawer";
+import { useState } from "react";
 
 export const TodosPage = () => {
   const { todos } = useTodos();
-  const filters = useTodoFilters(todos);
+  const { filtered, ...filterProps } = useTodoFilters(todos);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  //TO DELETE
+  console.log(filtered);
+
   return (
     <Layout>
       <div className="p-4">
-        <TodoFilters
-          search={filters.search}
-          setSearch={filters.setSearch}
-          statusFilter={filters.statusFilter}
-          setStatusFilter={filters.setStatusFilter}
-          priorityFilter={filters.priorityFilter}
-          setPriorityFilter={filters.setPriorityFilter}
-          sortBy={filters.sortBy}
-          setSortBy={filters.setSortBy}
-          sortOrder={filters.sortOrder}
-          setSortOrder={filters.setSortOrder}
-          resetFilters={filters.resetFilters}
-        />
-        <pre>{JSON.stringify(filters.filtered, null, 2)}</pre>
+        <button
+          type="button"
+          className="comic-btn flex gap-1 mx-auto"
+          onClick={() => setIsDrawerOpen(true)}
+        >
+          <FunnelPlus /> Show filters
+        </button>
       </div>
+      <TodoFilterDrawer
+        isOpen={isDrawerOpen}
+        handleClose={() => setIsDrawerOpen(false)}
+        {...filterProps}
+      />
     </Layout>
   );
 };

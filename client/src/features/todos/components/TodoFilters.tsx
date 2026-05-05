@@ -1,30 +1,14 @@
-import { TODO_PRIORITIES, TODO_STATUSES, type Todo } from "@taskflow/shared";
 import { FilterChip } from "./FilterChip";
 import { cn } from "@/lib/cn";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
-
-interface TodoFiltersProps {
-  search: string;
-  setSearch: (val: string) => void;
-  statusFilter: Todo["status"][];
-  setStatusFilter: (val: Todo["status"][]) => void;
-  priorityFilter: Todo["priority"][];
-  setPriorityFilter: (val: Todo["priority"][]) => void;
-  sortBy: "creationDate" | "priority" | "status";
-  setSortBy: (val: "creationDate" | "priority" | "status") => void;
-  sortOrder: "asc" | "desc";
-  setSortOrder: (val: "asc" | "desc") => void;
-  resetFilters: () => void;
-}
-
-const STATUS_OPTIONS = TODO_STATUSES;
-const PRIORITY_OPTIONS = TODO_PRIORITIES;
-const SORT_OPTIONS = ["creationDate", "priority", "status"] as const;
-
-const toggleChip = <T,>(current: T[], value: T): T[] =>
-  current.includes(value)
-    ? current.filter((v) => v !== value)
-    : [...current, value];
+import {
+  formatLabel,
+  PRIORITY_OPTIONS,
+  SORT_OPTIONS,
+  STATUS_OPTIONS,
+  toggleChip,
+  type TodoFiltersProps,
+} from "../utils/todoFilters.utils";
 
 export const TodoFilters = ({
   search,
@@ -38,9 +22,15 @@ export const TodoFilters = ({
   sortOrder,
   setSortOrder,
   resetFilters,
+  layout,
 }: TodoFiltersProps) => {
   return (
-    <div className="flex flex-col md:flex-row flex-wrap gap-(--space-sm) items-center justify-center mx-auto">
+    <div
+      className={cn(
+        "flex flex-wrap gap-(--space-sm) items-center justify-center mx-auto",
+        layout === "col" ? "flex-col" : "flex-row",
+      )}
+    >
       <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-1">
         <p>Find task</p>
         <input
@@ -48,7 +38,7 @@ export const TodoFilters = ({
           value={search}
           placeholder="search your task.."
           onChange={(e) => setSearch(e.target.value)}
-          className="comic-input w-65"
+          className="comic-input md:w-65"
         ></input>
       </div>
       <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-1">
@@ -81,7 +71,7 @@ export const TodoFilters = ({
       </div>
       <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-1">
         <p>Sort by status</p>
-        <div className="flex gap-(--space-sm)">
+        <div className="flex gap-(--space-sm) flex-wrap justify-center">
           {SORT_OPTIONS.map((option) => (
             <button
               key={option}
@@ -92,10 +82,9 @@ export const TodoFilters = ({
                 sortBy === option ? "comic-btn-primary" : "comic-btn-ghost",
               )}
             >
-              {option}
+              {formatLabel(option)}
             </button>
           ))}
-
           <button
             type="button"
             onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
@@ -105,7 +94,7 @@ export const TodoFilters = ({
           </button>
         </div>
       </div>
-      <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-1">
+      <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-2">
         <p>Reset</p>
         <button
           type="button"
