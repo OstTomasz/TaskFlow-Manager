@@ -14,7 +14,7 @@ const AVATAR_IDS: AvatarId[] = [
   "Av-10",
 ];
 
-const MOCK_USERS: User[] = Array.from({ length: 9 }, (_, i) => ({
+export const MOCK_USERS: User[] = Array.from({ length: 9 }, (_, i) => ({
   id: `user-${i + 1}`,
   name: `User ${i + 1}`,
   avatar: AVATAR_IDS[i],
