@@ -17,7 +17,8 @@ export const useTodoFilters = (todos: Todo[]) => {
       todos
         .filter(
           search
-            ? (todo) => todo.title.toLowerCase().includes(search.toLowerCase())
+            ? (todo) =>
+                todo.title.toLowerCase().includes(search.toLowerCase().trim())
             : () => true,
         )
         .filter(
