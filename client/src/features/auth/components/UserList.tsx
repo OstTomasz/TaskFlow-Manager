@@ -17,7 +17,7 @@ export const UserList = () => {
   if (isError) return <p>Cannot load users. Try reload page.</p>;
 
   return (
-    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-(--space-md) px-(--space-md) my-(--space-md)">
+    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-(--space-md) mx-7 my-(--space-md)">
       {data.map((user) => {
         return <UserCard key={user.id + pathname} user={user} />;
       })}

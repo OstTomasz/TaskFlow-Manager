@@ -49,10 +49,7 @@ export const UserCard = ({ user }: { user: User }) => {
   return (
     <li
       onClick={handleUserClick}
-      className={cn(
-        "cursor-pointer comic-card w-60 h-60 flex flex-col items-center overflow-hidden pt-4",
-        shaking && "animate-shake",
-      )}
+      className={cn("comic-card", shaking && "animate-shake")}
       onAnimationEnd={() => setShaking(false)}
     >
       <svg
@@ -96,9 +93,7 @@ export const UserCard = ({ user }: { user: User }) => {
           type="password"
           className="comic-input"
         />
-        <p className="text-sm text-error min-h-[1.21rem] my-2">
-          {errors.password?.message}
-        </p>
+        <p className="error-message">{errors.password?.message}</p>
         <button
           type="submit"
           className="comic-btn comic-btn-primary"

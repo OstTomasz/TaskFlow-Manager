@@ -22,10 +22,14 @@ const MOCK_USERS: User[] = Array.from({ length: 9 }, (_, i) => ({
   password: i < 5 ? `pass${i + 1}` : undefined,
 }));
 
+export const addMockUser = (user: User) => {
+  MOCK_USERS.push(user);
+};
+
 export const useUsers = () => {
   return useQuery({
     queryKey: ["users"],
-    queryFn: () => Promise.resolve(MOCK_USERS),
-    staleTime: Infinity,
+    queryFn: () => Promise.resolve([...MOCK_USERS]),
+    staleTime: 0,
   });
 };

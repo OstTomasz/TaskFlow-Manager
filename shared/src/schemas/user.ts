@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const UserSchema = z.object({
   id: z.uuid(),
-  name: z.string(),
+  name: z.string().min(2, "Name must be at least 2 characters"),
   avatar: z.string().min(1),
-  password: z.string().min(4).optional(),
+  password: z.string().default(""),
 });
 
 export type User = z.infer<typeof UserSchema>;
@@ -29,3 +29,30 @@ export const ChangePasswordSchema = z
   });
 
 export type ChangePassword = z.infer<typeof ChangePasswordSchema>;
+
+export const CreateUserSchema = UserSchema.omit({ id: true })
+  .extend({
+    passwordProtected: z.boolean(),
+    password: z.string(),
+    confirmPassword: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.passwordProtected) {
+      if (!data.password || data.password.length < 4) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Password must be at least 4 characters",
+          path: ["password"],
+        });
+      }
+      if (data.password !== data.confirmPassword) {
+        ctx.addIssue({
+          code: "custom",
+          message: "Passwords don't match",
+          path: ["confirmPassword"],
+        });
+      }
+    }
+  });
+
+export type CreateUser = z.infer<typeof CreateUserSchema>;

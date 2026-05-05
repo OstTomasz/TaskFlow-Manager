@@ -66,9 +66,7 @@ export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
             placeholder="Current password"
             className="comic-input"
           />
-          <p className="text-sm text-error min-h-[1.2rem]">
-            {errors.currentPassword?.message}
-          </p>
+          <p className="error-message">{errors.currentPassword?.message}</p>
 
           <input
             {...register("newPassword")}
@@ -76,9 +74,7 @@ export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
             placeholder="New password"
             className="comic-input"
           />
-          <p className="text-sm text-error min-h-[1.2rem]">
-            {errors.newPassword?.message}
-          </p>
+          <p className="error-message">{errors.newPassword?.message}</p>
 
           <input
             {...register("confirmNewPassword")}
@@ -86,9 +82,7 @@ export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
             placeholder="Confirm new password"
             className="comic-input"
           />
-          <p className="text-sm text-error min-h-[1.2rem]">
-            {errors.confirmNewPassword?.message}
-          </p>
+          <p className="error-message">{errors.confirmNewPassword?.message}</p>
 
           <button
             type="submit"
