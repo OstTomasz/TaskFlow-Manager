@@ -47,6 +47,14 @@ export const useTodoFilters = (todos: Todo[]) => {
     [todos, search, statusFilter, priorityFilter, sortBy, sortOrder],
   );
 
+  const resetFilters = () => {
+    setSearch("");
+    setStatusFilter([]);
+    setPriorityFilter([]);
+    setSortBy("creationDate");
+    setSortOrder("desc");
+  };
+
   return {
     filtered,
     search,
@@ -59,5 +67,6 @@ export const useTodoFilters = (todos: Todo[]) => {
     setSortBy,
     sortOrder,
     setSortOrder,
+    resetFilters,
   };
 };

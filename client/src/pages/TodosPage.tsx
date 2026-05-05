@@ -1,30 +1,28 @@
 import { Layout } from "@/components";
+import { useTodos } from "@/features/todos/hooks/useTodos";
+import { useTodoFilters } from "@/features/todos/hooks/useTodoFilters";
+import { TodoFilters } from "@/features/todos/components/TodoFilters";
 
 export const TodosPage = () => {
+  const { todos } = useTodos();
+  const filters = useTodoFilters(todos);
   return (
     <Layout>
-      <div className="h-full flex flex-col justify-around items-center">
-        {/* Task List */}
-        <h2>Task list</h2>
-        <div>
-          <span>Dot</span> <h3>Task name</h3> <span>Priority</span>
-          <button>\/</button>
-          {/* after expand */}
-          <p>Description</p>
-          <span>created at</span>
-          <p>modified at</p>
-          <button>edit</button>
-        </div>
-        {/* Task archive - expandable */}
-        <h2>Task archive</h2> <button>\/</button>
-        <div>
-          <span>Dot</span> <h3>Task name</h3> <span>Priority</span>
-          <button>\/</button>
-          {/* after expand */}
-          <p>Description</p>
-          <span>archived at</span>
-          <button>edit</button>
-        </div>
+      <div className="p-4">
+        <TodoFilters
+          search={filters.search}
+          setSearch={filters.setSearch}
+          statusFilter={filters.statusFilter}
+          setStatusFilter={filters.setStatusFilter}
+          priorityFilter={filters.priorityFilter}
+          setPriorityFilter={filters.setPriorityFilter}
+          sortBy={filters.sortBy}
+          setSortBy={filters.setSortBy}
+          sortOrder={filters.sortOrder}
+          setSortOrder={filters.setSortOrder}
+          resetFilters={filters.resetFilters}
+        />
+        <pre>{JSON.stringify(filters.filtered, null, 2)}</pre>
       </div>
     </Layout>
   );

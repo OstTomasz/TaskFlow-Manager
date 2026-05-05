@@ -33,3 +33,6 @@ export const EditTodoSchema = TodoFormSchema;
 export type TodoFormValues = z.infer<typeof TodoFormSchema>;
 export type CreateTodoValues = z.infer<typeof CreateTodoSchema>;
 export type EditTodoValues = z.infer<typeof EditTodoSchema>;
+
+export const TODO_STATUSES = ToDoSchema.shape.status.options;
+export const TODO_PRIORITIES = ToDoSchema.shape.priority.options;
