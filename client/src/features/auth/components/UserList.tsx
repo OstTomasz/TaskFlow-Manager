@@ -4,7 +4,7 @@ import { UserCard } from "./UserCard";
 import { useLocation } from "react-router-dom";
 
 export const UserList = () => {
-  const { data, isLoading, isError } = useUsers();
+  const { users, isLoading, isError } = useUsers();
 
   const { pathname } = useLocation();
 
@@ -18,7 +18,7 @@ export const UserList = () => {
 
   return (
     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-(--space-md) mx-7 my-(--space-md)">
-      {data.map((user) => {
+      {users.map((user) => {
         return <UserCard key={user.id + pathname} user={user} />;
       })}
     </ul>

@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { v4 as uuidv4 } from "uuid";
 import type { User } from "@taskflow/shared";
 import type { AvatarId } from "@/constants";
 
@@ -16,7 +15,7 @@ const AVATAR_IDS: AvatarId[] = [
 ];
 
 const MOCK_USERS: User[] = Array.from({ length: 9 }, (_, i) => ({
-  id: uuidv4(),
+  id: `user-${i + 1}`,
   name: `User ${i + 1}`,
   avatar: AVATAR_IDS[i],
   password: i < 5 ? `pass${i + 1}` : undefined,
@@ -27,9 +26,15 @@ export const addMockUser = (user: User) => {
 };
 
 export const useUsers = () => {
-  return useQuery({
+  const query = useQuery({
     queryKey: ["users"],
     queryFn: () => Promise.resolve([...MOCK_USERS]),
     staleTime: 0,
   });
+
+  return {
+    users: query.data ?? [],
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 };
