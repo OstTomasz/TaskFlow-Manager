@@ -5,20 +5,11 @@ import { FunnelPlus } from "lucide-react";
 import { TodoFilterDrawer } from "@/features/todos/components/TodoFilterDrawer";
 import { useState } from "react";
 import { TodoList } from "@/features/todos/components/TodoList";
-import { useAuthStore } from "@/features/auth/store/authStore";
 
 export const TodosPage = () => {
   const { todos } = useTodos();
   const { filtered, ...filterProps } = useTodoFilters(todos);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { user } = useAuthStore();
-
-  console.log("todos:", todos);
-  console.log("filtered:", filtered);
-  console.log("user:", user);
-
-  //TO DELETE
-  console.log(filtered);
 
   return (
     <Layout>

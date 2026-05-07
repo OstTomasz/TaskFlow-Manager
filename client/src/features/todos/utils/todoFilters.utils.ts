@@ -32,3 +32,8 @@ export const formatLabel = (label: string): string =>
     .replace(/_/g, " ")
     .replace(/([a-z])([A-Z])/g, "$1 $2")
     .replace(/^\w/, (c) => c.toUpperCase());
+
+export const cycleValue = <T>(options: readonly T[], current: T): T => {
+  const index = options.indexOf(current);
+  return options[(index + 1) % options.length];
+};

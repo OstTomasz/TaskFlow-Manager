@@ -5,7 +5,7 @@ export const ToDoSchema = z.object({
   title: z
     .string()
     .min(10, "Tell me more about it")
-    .max(100, "Describe it below"),
+    .max(50, "Describe it below"),
   description: z.string().optional(),
   priority: z.enum(["low", "medium", "high", "crucial"]),
   status: z.enum(["todo", "in_progress", "done"]),
