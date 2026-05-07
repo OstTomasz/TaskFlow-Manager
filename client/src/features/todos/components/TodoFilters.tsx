@@ -9,6 +9,7 @@ import {
   toggleChip,
   type TodoFiltersProps,
 } from "../utils/todoFilters.utils";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export const TodoFilters = ({
   search,
@@ -22,28 +23,29 @@ export const TodoFilters = ({
   sortOrder,
   setSortOrder,
   resetFilters,
-  layout,
 }: TodoFiltersProps) => {
+  const isShortScreen = useMediaQuery("(max-height: 630px)");
+
   return (
     <div
       className={cn(
-        "flex flex-wrap gap-(--space-sm) items-center justify-center mx-auto",
-        layout === "col" ? "flex-col" : "flex-row",
+        "flex flex-wrap flex-col gap-(--space-sm) items-center justify-center mx-auto",
+        isShortScreen ? "pt-25" : "pt-0",
       )}
     >
-      <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-1">
+      <div className="comic-card w-[95%] md:w-full h-fit p-3 flex flex-col items-center gap-1">
         <p>Find task</p>
         <input
           type="text"
           value={search}
           placeholder="search your task.."
           onChange={(e) => setSearch(e.target.value)}
-          className="comic-input md:w-65"
+          className="comic-input w-full"
         ></input>
       </div>
-      <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-1">
+      <div className="comic-card w-[95%] md:w-full h-fit p-3 flex flex-col items-center gap-1">
         <p>Filter by status</p>
-        <div className="flex gap-(--space-sm)">
+        <div className="flex gap-(--space-md)">
           {STATUS_OPTIONS.map((status) => (
             <FilterChip
               key={status}
@@ -54,9 +56,9 @@ export const TodoFilters = ({
           ))}
         </div>
       </div>
-      <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-1">
+      <div className="comic-card w-[95%] md:w-full h-fit p-3 flex flex-col items-center gap-1">
         <p>Filter by priority</p>
-        <div className="flex gap-(--space-sm)">
+        <div className="flex gap-(--space-sm) md:gap-(--space-md)">
           {PRIORITY_OPTIONS.map((priority) => (
             <FilterChip
               key={priority}
@@ -69,9 +71,9 @@ export const TodoFilters = ({
           ))}
         </div>
       </div>
-      <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-1">
+      <div className="comic-card w-[95%] md:w-full h-fit p-3 flex flex-col items-center gap-1">
         <p>Sort by status</p>
-        <div className="flex gap-(--space-sm) flex-wrap justify-center">
+        <div className="flex gap-(--space-md) flex-wrap justify-center">
           {SORT_OPTIONS.map((option) => (
             <button
               key={option}
@@ -94,7 +96,7 @@ export const TodoFilters = ({
           </button>
         </div>
       </div>
-      <div className="comic-card w-fit h-fit p-3 flex flex-col items-center gap-2">
+      <div className="comic-card w-[95%] md:w-full h-fit p-3 flex flex-col items-center gap-2">
         <p>Reset</p>
         <button
           type="button"

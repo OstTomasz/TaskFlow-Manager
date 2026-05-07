@@ -6,10 +6,12 @@ import { Loader } from "lucide-react";
 import { LoginSchema, type Login, type User } from "@taskflow/shared";
 import { avatars } from "@/constants";
 import { cn } from "@/lib/cn";
+import { useAuthStore } from "../store/authStore";
 
 export const UserCard = ({ user }: { user: User }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [shaking, setShaking] = useState(false);
+  const { setUser } = useAuthStore();
   const navigate = useNavigate();
 
   const {
@@ -31,6 +33,7 @@ export const UserCard = ({ user }: { user: User }) => {
       setShaking(true);
       return;
     }
+    setUser(user);
     navigate("/todos");
   };
 

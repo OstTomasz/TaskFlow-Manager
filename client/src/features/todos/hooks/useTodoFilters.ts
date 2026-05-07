@@ -7,9 +7,12 @@ const STATUS_WEIGHT = { todo: 0, in_progress: 1, done: 2 } as const;
 
 export const useTodoFilters = (todos: Todo[]) => {
   const [search, setSearch] = useState<string>("");
-  const [statusFilter, setStatusFilter] = useState<Todo["status"][]>([]);
+  const [statusFilter, setStatusFilter] = useState<Todo["status"][]>([
+    "todo",
+    "in_progress",
+  ]);
   const [priorityFilter, setPriorityFilter] = useState<Todo["priority"][]>([]);
-  const [sortBy, setSortBy] = useState<SortOptions>("creationDate");
+  const [sortBy, setSortBy] = useState<SortOptions>("priority");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   const filtered = useMemo(
@@ -49,9 +52,9 @@ export const useTodoFilters = (todos: Todo[]) => {
 
   const resetFilters = () => {
     setSearch("");
-    setStatusFilter([]);
+    setStatusFilter(["todo", "in_progress"]);
     setPriorityFilter([]);
-    setSortBy("creationDate");
+    setSortBy("priority");
     setSortOrder("desc");
   };
 
