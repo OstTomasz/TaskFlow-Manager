@@ -91,6 +91,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
               },
             })}
             type="checkbox"
+            className="comic-checkbox"
           />
           <span className="font-bold text-sm mt-1">
             Do you want to be protected?

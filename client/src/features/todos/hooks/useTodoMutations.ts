@@ -30,11 +30,10 @@ export const useTodoMutations = () => {
 
       const todo: Todo = {
         id: crypto.randomUUID(),
-        ...values,
-        status: "todo",
-        userId: userId,
+        userId,
         creationDate: date,
         lastModifiedDate: date,
+        ...values,
       };
       addMockTodo(todo);
       return Promise.resolve(todo);

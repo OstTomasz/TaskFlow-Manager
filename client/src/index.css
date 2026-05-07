@@ -112,6 +112,14 @@
     filter: brightness(1.1);
   }
 
+  .comic-panel {
+    @apply w-full p-5 flex flex-col;
+    background: var(--bg-surface);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+
   .comic-btn {
     font-family: var(--font-body);
     font-weight: 500;

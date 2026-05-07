@@ -25,13 +25,12 @@ export const TodoFormSchema = ToDoSchema.pick({
   status: true,
   badge: true,
 });
+export type TodoFormValues = z.infer<typeof TodoFormSchema>;
 
-export const CreateTodoSchema = TodoFormSchema.omit({ status: true });
+export const CreateTodoSchema = TodoFormSchema.omit({ badge: true });
+export type CreateTodoValues = z.infer<typeof CreateTodoSchema>;
 
 export const EditTodoSchema = TodoFormSchema;
-
-export type TodoFormValues = z.infer<typeof TodoFormSchema>;
-export type CreateTodoValues = z.infer<typeof CreateTodoSchema>;
 export type EditTodoValues = z.infer<typeof EditTodoSchema>;
 
 export const TODO_STATUSES = ToDoSchema.shape.status.options;

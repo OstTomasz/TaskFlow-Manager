@@ -3,6 +3,7 @@ import { Check, Pencil, Trash2, X } from "lucide-react";
 interface TodoItemActionsProps {
   open: boolean;
   activeForm: "edit" | "delete" | null;
+  isDisabled: boolean;
   onEdit: () => void;
   onDelete: () => void;
   onConfirmEdit: () => void;
@@ -18,13 +19,14 @@ export const TodoItemActions = ({
   onConfirmEdit,
   onConfirmDelete,
   onCancel,
+  isDisabled,
 }: TodoItemActionsProps) => {
   if (!open) return null;
 
   if (activeForm === "edit")
     return (
       <>
-        <button type="button" onClick={onConfirmEdit}>
+        <button type="button" onClick={onConfirmEdit} disabled={isDisabled}>
           <Check size={16} />
         </button>
         <button type="button" onClick={onCancel}>
@@ -36,7 +38,7 @@ export const TodoItemActions = ({
   if (activeForm === "delete")
     return (
       <>
-        <button type="button" onClick={onConfirmDelete}>
+        <button type="button" onClick={onConfirmDelete} disabled={isDisabled}>
           <Trash2 size={16} />
         </button>
         <button type="button" onClick={onCancel}>

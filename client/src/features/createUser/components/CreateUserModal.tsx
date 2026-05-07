@@ -4,7 +4,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { CreateUserForm } from "./createUserForm";
+import { CreateUserForm } from "./CreateUserForm";
 
 interface CreateUserModalProps {
   isOpen: boolean;

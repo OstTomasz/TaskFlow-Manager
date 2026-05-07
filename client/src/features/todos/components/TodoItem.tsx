@@ -34,7 +34,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
     setValue,
     control,
     getValues,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<EditTodoValues>({
     resolver: zodResolver(EditTodoSchema),
     defaultValues: {
@@ -66,6 +66,7 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
         const actionProps = {
           open,
           activeForm,
+          isDisabled: isSubmitting,
           onEdit: () => setActiveForm("edit"),
           onDelete: () => setActiveForm("delete"),
           onConfirmEdit,
