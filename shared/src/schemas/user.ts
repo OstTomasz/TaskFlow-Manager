@@ -56,3 +56,8 @@ export const CreateUserSchema = UserSchema.omit({ id: true })
   });
 
 export type CreateUser = z.infer<typeof CreateUserSchema>;
+
+export const DeleteUserSchema = z.object({
+  password: z.string().min(4, "Password must be at least 4 characters"),
+});
+export type DeleteUser = z.infer<typeof DeleteUserSchema>;

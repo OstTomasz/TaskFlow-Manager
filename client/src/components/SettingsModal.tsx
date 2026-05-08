@@ -4,38 +4,28 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangePasswordSchema, type ChangePassword } from "@taskflow/shared";
-import { Loader } from "lucide-react";
+
+import { ChangePassForm } from "@/features/auth/components/ChangePassForm";
+import { DeleteAccountSection } from "@/features/auth/components/DeleteAccountSection";
+import { useState } from "react";
+import { useAuthStore } from "@/features/auth/store/authStore";
 
 interface SettingsProps {
   isOpen: boolean;
   handleClose: () => void;
 }
 
-export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ChangePassword>({
-    resolver: zodResolver(ChangePasswordSchema),
-    mode: "onBlur",
-  });
+type ActiveSection = "changePass" | "deleteAcc" | null;
 
-  const onSubmit = (data: ChangePassword) => {
-    console.log(data);
-    handleClose();
-    reset();
-  };
+export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
+  const [activeSection, setActiveSection] = useState<ActiveSection>(null);
+  const { user } = useAuthStore();
 
   return (
     <Dialog
       open={isOpen}
       onClose={() => {
-        reset();
+        setActiveSection(null);
         handleClose();
       }}
     >
@@ -48,56 +38,36 @@ export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
       <DialogPanel
         transition
         className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-    w-80 bg-(--bg-primary) border-2 border-ink rounded-xl 
+    w-[90%] md:w-100 h-fit flex flex-col gap-2 bg-(--bg-primary) border-2 border-ink rounded-xl 
     p-(--space-md) shadow-(--shadow-comic) 
     transition duration-300 ease-in-out
     data-closed:opacity-0 data-closed:scale-95"
       >
-        <DialogTitle className="text-center text-2xl font-bold mb-(--space-sm)">
+        <DialogTitle className="text-center text-2xl font-bold">
           Settings
         </DialogTitle>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-(--space-sm)"
-        >
-          <input
-            {...register("currentPassword")}
-            type="password"
-            placeholder="Current password"
-            className="comic-input"
-          />
-          <p className="error-message">{errors.currentPassword?.message}</p>
+        {user?.password ? (
+          <>
+            {" "}
+            <ChangePassForm
+              handleClose={handleClose}
+              isExpanded={activeSection === "changePass"}
+              onToggle={() =>
+                setActiveSection((s) =>
+                  s === "changePass" ? null : "changePass",
+                )
+              }
+            />
+            <hr />
+          </>
+        ) : null}
 
-          <input
-            {...register("newPassword")}
-            type="password"
-            placeholder="New password"
-            className="comic-input"
-          />
-          <p className="error-message">{errors.newPassword?.message}</p>
-
-          <input
-            {...register("confirmNewPassword")}
-            type="password"
-            placeholder="Confirm new password"
-            className="comic-input"
-          />
-          <p className="error-message">{errors.confirmNewPassword?.message}</p>
-
-          <button
-            type="submit"
-            className="comic-btn comic-btn-primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <span className="flex items-center gap-1">
-                <Loader className="animate-spin" /> Saving...
-              </span>
-            ) : (
-              "Save"
-            )}
-          </button>
-        </form>
+        <DeleteAccountSection
+          isExpanded={activeSection === "deleteAcc"}
+          onToggle={() =>
+            setActiveSection((s) => (s === "deleteAcc" ? null : "deleteAcc"))
+          }
+        />
       </DialogPanel>
     </Dialog>
   );

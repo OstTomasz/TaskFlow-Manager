@@ -5,6 +5,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
+import { formatDate, fromNow } from "@/lib/date";
 import {
   EditTodoSchema,
   TODO_PRIORITIES,
@@ -174,6 +175,16 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
                   {todo.description ?? "No description."}
                 </p>
               )}
+              <div className="flex flex-col md:flex-row md:justify-between gap-1 mt-2 text-xs text-(--text-muted)">
+                <span>
+                  Created: {formatDate(todo.creationDate)} (
+                  {fromNow(todo.creationDate)})
+                </span>
+                <span>
+                  Modified: {formatDate(todo.lastModifiedDate)} (
+                  {fromNow(todo.lastModifiedDate)})
+                </span>
+              </div>
             </DisclosurePanel>
           </div>
         );

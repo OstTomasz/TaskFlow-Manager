@@ -24,8 +24,14 @@ export const UserCard = ({ user }: { user: User }) => {
     mode: "onSubmit",
   });
 
-  const handleUserClick = () =>
-    user.password === undefined ? navigate("/todos") : setIsExpanded(true);
+  const handleUserClick = () => {
+    if (user.password === undefined) {
+      setUser(user);
+      navigate("/todos");
+    } else {
+      setIsExpanded(true);
+    }
+  };
 
   const handleLogin = (data: Login) => {
     if (data.password !== user.password) {
