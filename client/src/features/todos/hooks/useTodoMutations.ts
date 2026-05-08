@@ -39,11 +39,33 @@ export const useTodoMutations = () => {
       addMockTodo(todo);
       return Promise.resolve(todo);
     },
-    onSuccess: (todo) => {
-      queryClient.invalidateQueries({ queryKey: ["todos", userId] });
-      toast.success(`"${todo.title}" created`);
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey: ["todos", userId] });
+      const previous = queryClient.getQueryData<Todo[]>(["todos", userId]);
+
+      const optimisticTodo: Todo = {
+        id: `temp-${Date.now()}`,
+        userId,
+        creationDate: new Date().toISOString(),
+        lastModifiedDate: new Date().toISOString(),
+        ...values,
+      };
+
+      queryClient.setQueryData<Todo[]>(["todos", userId], (old) => [
+        optimisticTodo,
+        ...(old ?? []),
+      ]);
+
+      return { previous };
     },
-    onError: () => toast.error("Failed to create task"),
+    onError: (_err, _id, context) => {
+      queryClient.setQueryData(["todos", userId], context?.previous);
+      toast.error("Failed to create task");
+    },
+    onSettled: (todo) => {
+      queryClient.invalidateQueries({ queryKey: ["todos", userId] });
+      if (todo) toast.success(`"${todo.title}" created`);
+    },
   });
 
   const updateTodo = useMutation({
@@ -59,11 +81,30 @@ export const useTodoMutations = () => {
       updateMockTodo(todo);
       return Promise.resolve(todo);
     },
-    onSuccess: (todo) => {
-      queryClient.invalidateQueries({ queryKey: ["todos", userId] });
-      toast.success(`"${todo.title}" updated`);
+    onMutate: async (values) => {
+      await queryClient.cancelQueries({ queryKey: ["todos", userId] });
+      const previous = queryClient.getQueryData<Todo[]>(["todos", userId]);
+
+      queryClient.setQueryData<Todo[]>(
+        ["todos", userId],
+        (old) =>
+          old?.map((t) =>
+            t.id === values.id
+              ? { ...t, ...values, lastModifiedDate: new Date().toISOString() }
+              : t,
+          ) ?? [],
+      );
+
+      return { previous };
     },
-    onError: () => toast.error("Failed to update task"),
+    onError: (_err, _id, context) => {
+      queryClient.setQueryData(["todos", userId], context?.previous);
+      toast.error("Failed to update task");
+    },
+    onSettled: (todo) => {
+      queryClient.invalidateQueries({ queryKey: ["todos", userId] });
+      if (todo) toast.success(`"${todo.title}" updated`);
+    },
   });
   const deleteTodo = useMutation({
     mutationFn: (id: string) => {
@@ -72,11 +113,24 @@ export const useTodoMutations = () => {
       deleteMockTodo(id);
       return Promise.resolve(id);
     },
-    onSuccess: () => {
+    // optimistic update
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["todos", userId] });
+      const previous = queryClient.getQueryData<Todo[]>(["todos", userId]);
+      queryClient.setQueryData<Todo[]>(
+        ["todos", userId],
+        (old) => old?.filter((t) => t.id !== id) ?? [],
+      );
+      return { previous }; // context for onError
+    },
+    onError: (_err, _id, context) => {
+      queryClient.setQueryData(["todos", userId], context?.previous);
+      toast.error("Failed to delete task");
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["todos", userId] });
       toast.success("Task deleted");
     },
-    onError: () => toast.error("Failed to delete task"),
   });
 
   return { createTodo, updateTodo, deleteTodo };
