@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { User } from "@taskflow/shared";
 import type { AvatarId } from "@/constants";
 import { useAuthStore } from "../store/authStore";
+import { toast } from "sonner";
 
 const AVATAR_IDS: AvatarId[] = [
   "Av-1",
@@ -60,6 +61,8 @@ export const useDeleteUser = () => {
     onSuccess: () => {
       logout();
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("Account deleted");
     },
+    onError: (err: Error) => toast.error(err.message),
   });
 };

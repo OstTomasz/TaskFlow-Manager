@@ -2,6 +2,7 @@ import type { CreateTodoValues, EditTodoValues, Todo } from "@taskflow/shared";
 import { MOCK_TODOS } from "./useTodos";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/features/auth/store/authStore";
+import { toast } from "sonner";
 
 export const addMockTodo = (todo: Todo) => {
   MOCK_TODOS.push(todo);
@@ -38,9 +39,11 @@ export const useTodoMutations = () => {
       addMockTodo(todo);
       return Promise.resolve(todo);
     },
-    onSuccess: () => {
+    onSuccess: (todo) => {
       queryClient.invalidateQueries({ queryKey: ["todos", userId] });
+      toast.success(`"${todo.title}" created`);
     },
+    onError: () => toast.error("Failed to create task"),
   });
 
   const updateTodo = useMutation({
@@ -56,9 +59,11 @@ export const useTodoMutations = () => {
       updateMockTodo(todo);
       return Promise.resolve(todo);
     },
-    onSuccess: () => {
+    onSuccess: (todo) => {
       queryClient.invalidateQueries({ queryKey: ["todos", userId] });
+      toast.success(`"${todo.title}" updated`);
     },
+    onError: () => toast.error("Failed to update task"),
   });
   const deleteTodo = useMutation({
     mutationFn: (id: string) => {
@@ -69,7 +74,9 @@ export const useTodoMutations = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["todos", userId] });
+      toast.success("Task deleted");
     },
+    onError: () => toast.error("Failed to delete task"),
   });
 
   return { createTodo, updateTodo, deleteTodo };

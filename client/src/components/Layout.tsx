@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import { Topbar, Footer } from "@/components";
 
 interface LayoutProps {
@@ -10,6 +11,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <Topbar />
       <main className="flex flex-col grow">{children}</main>
       <Footer />
+      <Toaster richColors position="top-center" />
     </>
   );
 };

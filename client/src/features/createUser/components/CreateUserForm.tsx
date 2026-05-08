@@ -8,6 +8,7 @@ import { addMockUser } from "@/features/auth/hooks/useUsers";
 import { CreateUserSchema, type CreateUser } from "@taskflow/shared";
 import { avatars, type AvatarId } from "@/constants";
 import { AvatarsGallery } from "@/components";
+import { toast } from "sonner";
 
 interface CreateUserFormProps {
   onSuccess: (data: CreateUser) => Promise<void> | void;
@@ -51,6 +52,7 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
       password: data.passwordProtected ? data.password : undefined,
     });
     queryClient.invalidateQueries({ queryKey: ["users"] });
+    toast.success(`User "${data.name}" created`);
     await onSuccess(data);
     reset();
   };

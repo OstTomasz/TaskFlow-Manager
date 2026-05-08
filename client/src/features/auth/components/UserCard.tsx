@@ -7,6 +7,7 @@ import { LoginSchema, type Login, type User } from "@taskflow/shared";
 import { avatars } from "@/constants";
 import { cn } from "@/lib/cn";
 import { useAuthStore } from "../store/authStore";
+import { toast } from "sonner";
 
 export const UserCard = ({ user }: { user: User }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -27,6 +28,7 @@ export const UserCard = ({ user }: { user: User }) => {
   const handleUserClick = () => {
     if (user.password === undefined) {
       setUser(user);
+      toast.success(`Welcome, ${user.name}!`);
       navigate("/todos");
     } else {
       setIsExpanded(true);
@@ -40,6 +42,7 @@ export const UserCard = ({ user }: { user: User }) => {
       return;
     }
     setUser(user);
+    toast.success(`Welcome, ${user.name}!`);
     navigate("/todos");
   };
 
