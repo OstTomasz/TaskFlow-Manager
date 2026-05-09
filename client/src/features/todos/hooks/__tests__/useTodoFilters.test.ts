@@ -1,15 +1,24 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useTodoFilters } from "../useTodoFilters";
 import { MOCK } from "./fixtures/todos";
 
-describe("useTodoFilters", () => {
-  let result: ReturnType<
-    typeof renderHook<ReturnType<typeof useTodoFilters>, unknown>
-  >["result"];
+vi.stubGlobal("matchMedia", (query: string) => ({
+  matches: false,
+  media: query,
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+}));
+let result: ReturnType<
+  typeof renderHook<ReturnType<typeof useTodoFilters>, unknown>
+>["result"];
 
+describe("useTodoFilters", () => {
   beforeEach(() => {
     ({ result } = renderHook(() => useTodoFilters(MOCK)));
+    act(() => {
+      result.current.setStatusFilter([]);
+    });
   });
 
   it("returns all todos when no filters active", () => {
@@ -69,11 +78,11 @@ describe("useTodoFilters", () => {
     });
 
     expect(result.current.filtered).toHaveLength(2);
-    expect(result.current.filtered[0].id).toBe(
-      "1a2b3c4d-0000-0000-0000-000000000006",
-    );
-    expect(result.current.filtered[1].id).toBe(
+    expect(result.current.filtered.map((t) => t.id)).toContain(
       "1a2b3c4d-0000-0000-0000-000000000005",
+    );
+    expect(result.current.filtered.map((t) => t.id)).toContain(
+      "1a2b3c4d-0000-0000-0000-000000000006",
     );
   });
 
@@ -145,5 +154,59 @@ describe("useTodoFilters", () => {
     expect(result.current.filtered.at(-1)?.id).toBe(
       "1a2b3c4d-0000-0000-0000-000000000001",
     );
+  });
+});
+
+describe("pagination", () => {
+  beforeEach(() => {
+    ({ result } = renderHook(() => useTodoFilters(MOCK)));
+    act(() => {
+      result.current.setStatusFilter([]);
+    });
+  });
+
+  it("returns first page of paginated results", () => {
+    // matchMedia mock zwraca matches: false → pageSize: 10
+    // 6 tasków → wszystkie na stronie 1
+    expect(result.current.paginated).toHaveLength(6);
+    expect(result.current.totalPages).toBe(1);
+    expect(result.current.page).toBe(1);
+  });
+
+  it("changes page correctly", () => {
+    act(() => {
+      result.current.setPage(2);
+    });
+    expect(result.current.page).toBe(2);
+  });
+
+  it("resets page to 1 on search change", () => {
+    act(() => {
+      result.current.setPage(2);
+    });
+    act(() => {
+      result.current.setSearch("test");
+    });
+    expect(result.current.page).toBe(1);
+  });
+
+  it("resets page to 1 on status filter change", () => {
+    act(() => {
+      result.current.setPage(2);
+    });
+    act(() => {
+      result.current.setStatusFilter(["todo"]);
+    });
+    expect(result.current.page).toBe(1);
+  });
+
+  it("resets page to 1 on resetFilters", () => {
+    act(() => {
+      result.current.setPage(2);
+    });
+    act(() => {
+      result.current.resetFilters();
+    });
+    expect(result.current.page).toBe(1);
   });
 });

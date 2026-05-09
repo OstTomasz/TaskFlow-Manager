@@ -38,6 +38,7 @@ describe("useTodoMutations", () => {
       result.current.createTodo.mutate({
         title: "Test todo title here",
         priority: "medium",
+        status: "todo",
       });
     });
 
