@@ -6,3 +6,4 @@ export { ThemeToggler } from "./ThemeToggler";
 export { AvatarsGallery } from "./AvatarsGallery";
 export { MobileMenu } from "./MobileMenu";
 export { SettingsModal } from "./SettingsModal";
+export { ErrorBoundary } from "./ErrorBoundary";

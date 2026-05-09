@@ -3,8 +3,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const SESSION_TIMEOUT = 5 * 1000;
-const WARNING_BEFORE = SESSION_TIMEOUT - 1000;
+const SESSION_TIMEOUT = 10 * 60 * 1000;
+const WARNING_BEFORE = 9 * 60 * 1000;
 const EVENTS = ["click", "keydown", "scroll", "touchstart"] as const;
 
 export const useSessionExpiry = () => {

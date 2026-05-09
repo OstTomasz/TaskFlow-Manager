@@ -1,15 +1,10 @@
 import { useThemeStore } from "@/features/theme/store/themeStore";
-import { useEffect } from "react";
 import { Switch } from "@headlessui/react";
 import { cn } from "@/lib/cn";
 import { Moon, Sun } from "lucide-react";
 
 export const ThemeToggler = () => {
   const { theme, setTheme } = useThemeStore();
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
 
   const handleChange = (checked: boolean) =>
     setTheme(checked ? "dark" : "light");

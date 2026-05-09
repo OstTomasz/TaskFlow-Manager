@@ -177,13 +177,21 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
               )}
               <div className="flex flex-col md:flex-row md:justify-between gap-1 mt-2 text-xs text-(--text-muted)">
                 <span>
-                  Created: {formatDate(todo.creationDate)} (
+                  Created at: {formatDate(todo.creationDate)} (
                   {fromNow(todo.creationDate)})
                 </span>
-                <span>
-                  Modified: {formatDate(todo.lastModifiedDate)} (
-                  {fromNow(todo.lastModifiedDate)})
-                </span>
+
+                {todo.status === "done" && todo.completeDate ? (
+                  <span>
+                    Completed at: {formatDate(todo.completeDate)} (
+                    {fromNow(todo.completeDate)})
+                  </span>
+                ) : (
+                  <span>
+                    Modified at: {formatDate(todo.lastModifiedDate)} (
+                    {fromNow(todo.lastModifiedDate)})
+                  </span>
+                )}
               </div>
             </DisclosurePanel>
           </div>

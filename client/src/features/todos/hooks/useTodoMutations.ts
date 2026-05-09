@@ -77,6 +77,8 @@ export const useTodoMutations = () => {
         ...existing,
         ...values,
         lastModifiedDate: new Date().toISOString(),
+        completeDate:
+          values.status === "done" ? new Date().toISOString() : undefined,
       };
       updateMockTodo(todo);
       return Promise.resolve(todo);
