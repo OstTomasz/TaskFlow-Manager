@@ -7,10 +7,12 @@ import { useState } from "react";
 import { TodoList } from "@/features/todos/components/TodoList";
 import { TodoCreateDrawer } from "@/features/todos/components/TodoCreateDrawer";
 import { TodoEmptyState } from "@/features/todos/components/TodoEmptyState";
+import { TodoPagination } from "@/features/todos/components/TodoPagination";
 
 export const TodosPage = () => {
   const { todos } = useTodos();
-  const { filtered, ...filterProps } = useTodoFilters(todos);
+  const { paginated, page, setPage, totalPages, ...paginatedProps } =
+    useTodoFilters(todos);
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
@@ -20,32 +22,38 @@ export const TodosPage = () => {
         {todos.length > 0 ? (
           <button
             type="button"
-            className="comic-btn flex gap-1 items-center justify-center"
+            className="comic-btn"
             onClick={() => setIsFilterDrawerOpen(true)}
           >
-            <FunnelPlus /> Show filters
+            <FunnelPlus /> <span>Show filters</span>
           </button>
         ) : null}
         <button
           type="button"
-          className="comic-btn comic-btn-primary flex gap-1 items-center justify-center"
+          className="comic-btn comic-btn-primary"
           onClick={() => setIsCreateDrawerOpen(true)}
         >
-          <Plus className="stroke-ink" /> Create task
+          <Plus className="stroke-ink" />
+          <span>Create task</span>
         </button>
       </div>
       {todos.length === 0 ? (
         <TodoEmptyState variant="empty" />
-      ) : filtered.length === 0 ? (
+      ) : paginated.length === 0 ? (
         <TodoEmptyState variant="filtered" />
       ) : (
-        <TodoList todos={filtered} />
+        <TodoList todos={paginated} />
       )}
+      <TodoPagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
 
       <TodoFilterDrawer
         isOpen={isFilterDrawerOpen}
         handleClose={() => setIsFilterDrawerOpen(false)}
-        {...filterProps}
+        {...paginatedProps}
       />
 
       <TodoCreateDrawer

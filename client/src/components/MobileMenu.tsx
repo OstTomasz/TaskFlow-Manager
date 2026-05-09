@@ -40,14 +40,11 @@ data-closed:-translate-y-full     data-closed:translate-x-full"
           <X />
         </button>
         <div className="flex flex-col gap-(--space-md) mt-(--space-xl) ml-(--space-sm) mb-(--space-sm)">
-          <button
-            className="flex gap-(--space-sm)"
-            onClick={handleSettingsOpen}
-          >
-            <Settings /> Settings
+          <button className="comic-btn w-30" onClick={handleSettingsOpen}>
+            <Settings /> <span>Settings</span>
           </button>
-          <button className="flex gap-(--space-sm)" onClick={handleLogout}>
-            <LogOut /> Logout
+          <button className="comic-btn w-30" onClick={handleLogout}>
+            <LogOut /> <span>Logout</span>
           </button>
           <ThemeToggler />
         </div>

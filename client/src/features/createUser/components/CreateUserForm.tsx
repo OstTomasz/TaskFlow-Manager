@@ -130,9 +130,10 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
         disabled={isSubmitting}
       >
         {isSubmitting ? (
-          <span className="flex items-center gap-1">
-            <Loader className="animate-spin" /> Creating...
-          </span>
+          <>
+            <Loader className="animate-spin" />
+            <span>Creating...</span>
+          </>
         ) : (
           "Create"
         )}

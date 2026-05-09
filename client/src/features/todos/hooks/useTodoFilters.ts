@@ -1,5 +1,6 @@
-import type { Todo } from "@taskflow/shared";
 import { useMemo, useState } from "react";
+import type { Todo } from "@taskflow/shared";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 type SortOptions = "creationDate" | "priority" | "status";
 const PRIORITY_WEIGHT = { low: 0, medium: 1, high: 2, crucial: 3 } as const;
@@ -14,6 +15,9 @@ export const useTodoFilters = (todos: Todo[]) => {
   const [priorityFilter, setPriorityFilter] = useState<Todo["priority"][]>([]);
   const [sortBy, setSortBy] = useState<SortOptions>("priority");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const isShortScreen = useMediaQuery("(max-height: 630px)");
+  const pageSize = isShortScreen ? 5 : 10;
+  const [page, setPage] = useState(1);
 
   const filtered = useMemo(
     () =>
@@ -50,7 +54,36 @@ export const useTodoFilters = (todos: Todo[]) => {
     [todos, search, statusFilter, priorityFilter, sortBy, sortOrder],
   );
 
+  const totalPages = Math.ceil(filtered.length / pageSize);
+
+  const paginated = useMemo(
+    () => filtered.slice((page - 1) * pageSize, page * pageSize),
+    [filtered, page, pageSize],
+  );
+
+  const handleSetSearch = (v: string) => {
+    setPage(1);
+    setSearch(v);
+  };
+  const handleSetStatusFilter = (v: Todo["status"][]) => {
+    setPage(1);
+    setStatusFilter(v);
+  };
+  const handleSetPriorityFilter = (v: Todo["priority"][]) => {
+    setPage(1);
+    setPriorityFilter(v);
+  };
+  const handleSetSortBy = (v: SortOptions) => {
+    setPage(1);
+    setSortBy(v);
+  };
+  const handleSetSortOrder = (v: "asc" | "desc") => {
+    setPage(1);
+    setSortOrder(v);
+  };
+
   const resetFilters = () => {
+    setPage(1);
     setSearch("");
     setStatusFilter(["todo", "in_progress"]);
     setPriorityFilter([]);
@@ -60,16 +93,21 @@ export const useTodoFilters = (todos: Todo[]) => {
 
   return {
     filtered,
+    paginated,
+    page,
+    setPage,
+    totalPages,
+    pageSize,
     search,
-    setSearch,
+    setSearch: handleSetSearch,
     statusFilter,
-    setStatusFilter,
+    setStatusFilter: handleSetStatusFilter,
     priorityFilter,
-    setPriorityFilter,
+    setPriorityFilter: handleSetPriorityFilter,
     sortBy,
-    setSortBy,
+    setSortBy: handleSetSortBy,
     sortOrder,
-    setSortOrder,
+    setSortOrder: handleSetSortOrder,
     resetFilters,
   };
 };

@@ -39,9 +39,9 @@ export const ChangePassForm = ({
           onToggle();
           reset();
         }}
-        className="comic-btn flex flex-row"
+        className="comic-btn w-50"
       >
-        Change Password
+        <span>Change Password</span>
         {isExpanded ? <ChevronUp /> : <ChevronDown />}
       </button>
       <div
@@ -90,9 +90,10 @@ export const ChangePassForm = ({
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <span className="flex items-center gap-1">
-                  <Loader className="animate-spin" /> Saving...
-                </span>
+                <>
+                  <Loader className="animate-spin" />
+                  <span>Saving...</span>
+                </>
               ) : (
                 "Save"
               )}

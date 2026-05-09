@@ -112,9 +112,10 @@ export const UserCard = ({ user }: { user: User }) => {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <span className="flex items-center gap-1">
-              <Loader className="animate-spin" /> Logging..
-            </span>
+            <>
+              <Loader className="animate-spin" />
+              <span>Logging..</span>
+            </>
           ) : (
             "Login"
           )}

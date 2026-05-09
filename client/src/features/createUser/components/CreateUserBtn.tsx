@@ -5,10 +5,10 @@ export const CreateUserBtn = ({ handleClick }: { handleClick: () => void }) => {
     <button
       type="button"
       onClick={handleClick}
-      className="comic-card w-70 justify-center items-center pt-0"
+      className="w-[90dvw] md:w-fit comic-btn"
     >
-      <h3 className="text-center text-3xl font-bold">Create New User</h3>
-      <UserRoundPlus size={80} className="mt-5" />
+      <span className="text-center text-3xl font-bold">Create New User</span>
+      <UserRoundPlus size={80} />
     </button>
   );
 };

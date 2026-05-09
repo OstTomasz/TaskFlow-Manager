@@ -134,13 +134,16 @@
   .comic-btn {
     font-family: var(--font-body);
     font-weight: 500;
-    padding: 8px 16px;
     border-radius: 8px;
     border: var(--border-width) solid var(--border-color);
     box-shadow: var(--shadow-comic-sm);
     cursor: pointer;
     transition: transform 0.1s;
-    @apply px-2 py-1 md:px-4 md:py-2;
+    @apply flex flex-row gap-2 items-center justify-center px-2 py-1 md:px-4 md:py-2;
+  }
+
+  .comic-btn span {
+    margin-top: 0.125rem;
   }
 
   .comic-btn:active {

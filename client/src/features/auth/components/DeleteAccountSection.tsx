@@ -48,16 +48,18 @@ export const DeleteAccountSection = ({
           onToggle();
           reset();
         }}
-        className="w-fit comic-btn mx-auto"
+        className="w-50 comic-btn mx-auto"
       >
         {isExpanded ? (
-          <span className=" flex flex-row">
-            Cancel <ChevronUp />
-          </span>
+          <>
+            <span>Cancel</span>
+            <ChevronUp />
+          </>
         ) : (
-          <span className=" flex flex-row">
-            Delete account <ChevronDown />
-          </span>
+          <>
+            <span>Delete account</span>
+            <ChevronDown />
+          </>
         )}
       </button>
 
@@ -94,10 +96,9 @@ export const DeleteAccountSection = ({
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <p>
-                  <Loader />
-                  Deleting...
-                </p>
+                <>
+                  <Loader className="animate-spin" /> <span>Deleting...</span>
+                </>
               ) : (
                 "Confirm"
               )}

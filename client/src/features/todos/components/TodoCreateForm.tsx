@@ -102,9 +102,10 @@ export const TodoCreateForm = ({ onClose }: TodoCreateFormSchema) => {
         </label>
         <button type="submit" disabled={isSubmitting} className="comic-btn">
           {isSubmitting ? (
-            <p className="flex flex-row">
-              <Loader /> Creating...
-            </p>
+            <>
+              <Loader className="animate-spin" />
+              <span>Creating...</span>
+            </>
           ) : (
             "Create"
           )}

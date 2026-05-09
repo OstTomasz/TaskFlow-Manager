@@ -11,7 +11,7 @@ export const Layout = ({ children }: LayoutProps) => {
   return (
     <>
       <Topbar />
-      <main className="flex flex-col grow">{children}</main>
+      <main className="flex flex-col grow py-5">{children}</main>
       <Footer />
       <Toaster
         richColors
