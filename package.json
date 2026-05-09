@@ -12,5 +12,10 @@
   "packageManager": "pnpm@11.0.8",
   "devDependencies": {
     "vitest": "^4.1.5"
-  }
+  },
+  "workspaces": [
+    "client",
+    "shared",
+    "server"
+  ]
 }
