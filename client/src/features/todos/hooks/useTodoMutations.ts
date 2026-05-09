@@ -34,6 +34,7 @@ export const useTodoMutations = () => {
         userId,
         creationDate: date,
         lastModifiedDate: date,
+        completeDate: values.status === "done" ? date : undefined,
         ...values,
       };
       addMockTodo(todo);
