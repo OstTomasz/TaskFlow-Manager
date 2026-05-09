@@ -1,18 +1,21 @@
+import { useState } from "react";
+import { FunnelPlus, Plus } from "lucide-react";
 import { Layout } from "@/components";
 import { useTodos } from "@/features/todos/hooks/useTodos";
 import { useTodoFilters } from "@/features/todos/hooks/useTodoFilters";
-import { FunnelPlus, Plus } from "lucide-react";
+import { useSessionExpiry } from "@/hooks/useSessionExpiry";
 import { TodoFilterDrawer } from "@/features/todos/components/TodoFilterDrawer";
-import { useState } from "react";
 import { TodoList } from "@/features/todos/components/TodoList";
 import { TodoCreateDrawer } from "@/features/todos/components/TodoCreateDrawer";
 import { TodoEmptyState } from "@/features/todos/components/TodoEmptyState";
 import { TodoPagination } from "@/features/todos/components/TodoPagination";
+import { SessionWarningModal } from "@/components/SessionWarningModal";
 
 export const TodosPage = () => {
   const { todos } = useTodos();
   const { paginated, page, setPage, totalPages, ...paginatedProps } =
     useTodoFilters(todos);
+  const { showWarning, secondsLeft } = useSessionExpiry();
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
@@ -60,6 +63,7 @@ export const TodosPage = () => {
         isOpen={isCreateDrawerOpen}
         handleClose={() => setIsCreateDrawerOpen(false)}
       />
+      <SessionWarningModal isOpen={showWarning} secondsLeft={secondsLeft} />
     </Layout>
   );
 };
