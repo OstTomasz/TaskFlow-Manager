@@ -10,9 +10,9 @@ export const UserSchema = z.object({
 export type User = z.infer<typeof UserSchema>;
 
 export const LoginSchema = z.object({
+  userId: z.string().min(1),
   password: z.string(),
 });
-
 export type Login = z.infer<typeof LoginSchema>;
 
 export const ChangePasswordSchema = z

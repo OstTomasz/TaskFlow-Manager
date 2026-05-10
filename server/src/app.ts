@@ -6,6 +6,8 @@ import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import { authRouter } from "./features/auth/auth.routes";
+import morgan from "morgan";
 
 export const app = express();
 
@@ -23,6 +25,9 @@ app.use(
   }),
 );
 app.use(helmet());
+if (env.NODE_ENV !== "test") {
+  app.use(morgan("dev"));
+}
 app.use(limiter);
 
 app.use(express.json());
@@ -33,6 +38,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 // TODO: mount feature routers here
+app.use("/api/auth", authRouter);
 
 app.use(notFound);
 app.use(errorHandler);
