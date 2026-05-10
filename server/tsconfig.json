@@ -10,7 +10,8 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@taskflow/shared": ["../shared/src/index.ts"]
+      "@taskflow/shared": ["../shared/src/index.ts"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "../shared/src"],

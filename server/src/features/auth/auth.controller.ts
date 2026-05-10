@@ -1,6 +1,4 @@
 import type { Request, Response } from "express";
-import { wrapAsync } from "../../utils/wrapAsync";
-
 import {
   CreateUserSchema,
   LoginSchema,
@@ -16,13 +14,19 @@ import {
   changePassword,
   deleteUser,
 } from "./auth.service";
-import { AppError } from "../../utils/appError";
+import { wrapAsync } from "@/utils/wrapAsync";
+import { AppError } from "@/utils/appError";
+import { verifyRefreshToken } from "@/lib/jwt";
 
 /** Cookie config — httpOnly prevents JS access (XSS protection). */
-const REFRESH_COOKIE_OPTIONS = {
+const REFRESH_COOKIE_BASE = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production", // HTTPS only in prod
   sameSite: "strict" as const,
+} as const;
+
+const REFRESH_COOKIE_OPTIONS = {
+  ...REFRESH_COOKIE_BASE,
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7d in ms
 } as const;
 
@@ -83,16 +87,14 @@ export const logout = wrapAsync(async (req: Request, res: Response) => {
      * Don't throw here: logout should always succeed from client's perspective.
      */
     try {
-      const { userId } = await import("../../lib/jwt").then((m) =>
-        m.verifyRefreshToken(token),
-      );
+      const { userId } = verifyRefreshToken(token);
       await logoutUser(userId);
     } catch {
       // token invalid/expired — just clear the cookie
     }
   }
 
-  res.clearCookie("refreshToken", REFRESH_COOKIE_OPTIONS);
+  res.clearCookie("refreshToken", REFRESH_COOKIE_BASE);
   res.json({ status: "success", data: null, message: "Logged out" });
 });
 

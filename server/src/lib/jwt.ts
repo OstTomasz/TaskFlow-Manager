@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
-import { env } from "../env";
+
+import { randomUUID } from "crypto";
+import { env } from "@/env";
 
 /**
  * Shape of the JWT payload for access tokens.
@@ -32,7 +34,7 @@ export const signAccessToken = (payload: AccessTokenPayload): string =>
  * Sent as httpOnly cookie — JS cannot read it, protects against XSS.
  */
 export const signRefreshToken = (payload: RefreshTokenPayload): string =>
-  jwt.sign(payload, env.REFRESH_TOKEN_SECRET, {
+  jwt.sign({ ...payload, jti: randomUUID() }, env.REFRESH_TOKEN_SECRET, {
     expiresIn: env.REFRESH_TOKEN_EXPIRES_IN as jwt.SignOptions["expiresIn"],
   });
 

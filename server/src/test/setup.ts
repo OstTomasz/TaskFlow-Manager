@@ -10,7 +10,11 @@ let mongod: MongoMemoryServer;
  */
 beforeAll(async () => {
   mongod = await MongoMemoryServer.create();
-  await mongoose.connect(mongod.getUri(), { dbName: "taskflow-test" });
+  const uri = mongod.getUri();
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
+  await mongoose.connect(uri, { dbName: "taskflow-test" });
 });
 
 /**

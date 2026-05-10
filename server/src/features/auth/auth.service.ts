@@ -1,14 +1,12 @@
 import bcrypt from "bcryptjs";
-
+import { IUser, UserModel } from "./auth.model";
 import {
   signAccessToken,
   signRefreshToken,
   verifyRefreshToken,
-} from "../../lib/jwt";
-import { UserModel, type IUser } from "./auth.model";
-import { AppError } from "../../utils/appError";
-
-const SALT_ROUNDS = 10;
+} from "@/lib/jwt";
+import { AppError } from "@/utils/appError";
+import { SALT_ROUNDS } from "@/config/constants";
 
 /**
  * Hashes a plain-text password.
