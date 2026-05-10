@@ -10,12 +10,15 @@ import { SALT_ROUNDS } from "@/config/constants";
  * Keeps tests independent from /register endpoint.
  */
 export const createUser = async (
-  overrides?: Partial<{ password: string; passwordProtected: boolean }>,
+  overrides?: Partial<{
+    password: string;
+    name: string;
+  }>,
 ) => {
   const plain = overrides?.password ?? "pass1234";
   const hashed = plain ? await bcrypt.hash(plain, SALT_ROUNDS) : "";
   return UserModel.create({
-    name: "TestUser",
+    name: overrides?.name ?? "TestUser",
     avatar: "avatar-1",
     password: hashed,
   });

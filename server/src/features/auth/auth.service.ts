@@ -7,6 +7,7 @@ import {
 } from "@/lib/jwt";
 import { AppError } from "@/utils/appError";
 import { SALT_ROUNDS } from "@/config/constants";
+import { deleteUserTodos } from "../todos/todos.service";
 
 /**
  * Hashes a plain-text password.
@@ -149,5 +150,10 @@ export const deleteUser = async (userId: string, password?: string) => {
     if (!valid) throw new AppError("Invalid password", 401);
   }
 
+  /**
+   * Delete todos before user — prevents orphaned documents
+   * if user deletion fails halfway through.
+   */
+  await deleteUserTodos(userId);
   await UserModel.findByIdAndDelete(userId);
 };

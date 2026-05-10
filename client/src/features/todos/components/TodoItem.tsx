@@ -43,7 +43,6 @@ export const TodoItem = ({ todo }: TodoItemProps) => {
       description: todo.description ?? "",
       priority: todo.priority,
       status: todo.status,
-      badge: todo.badge,
     },
     mode: "onBlur",
   });

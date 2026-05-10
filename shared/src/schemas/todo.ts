@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ToDoSchema = z.object({
-  id: z.uuid(),
+  id: z.string(),
   title: z
     .string()
     .min(10, "Tell me more about it")
@@ -12,7 +12,6 @@ export const ToDoSchema = z.object({
   creationDate: z.iso.datetime(),
   lastModifiedDate: z.iso.datetime(),
   completeDate: z.iso.datetime().optional(),
-  badge: z.string().optional(),
   userId: z.string(),
 });
 
@@ -23,11 +22,10 @@ export const TodoFormSchema = ToDoSchema.pick({
   description: true,
   priority: true,
   status: true,
-  badge: true,
 });
 export type TodoFormValues = z.infer<typeof TodoFormSchema>;
 
-export const CreateTodoSchema = TodoFormSchema.omit({ badge: true });
+export const CreateTodoSchema = TodoFormSchema;
 export type CreateTodoValues = z.infer<typeof CreateTodoSchema>;
 
 export const EditTodoSchema = TodoFormSchema;

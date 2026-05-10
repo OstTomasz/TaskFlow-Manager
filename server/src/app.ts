@@ -8,6 +8,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { authRouter } from "./features/auth/auth.routes";
 import morgan from "morgan";
+import { todosRouter } from "./features/todos/todos.routes";
 
 export const app = express();
 
@@ -39,6 +40,7 @@ app.get("/api/health", (_req, res) => {
 
 // TODO: mount feature routers here
 app.use("/api/auth", authRouter);
+app.use("/api/todos", todosRouter);
 
 app.use(notFound);
 app.use(errorHandler);
