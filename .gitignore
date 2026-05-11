@@ -12,6 +12,7 @@ build/
 .env
 .env.*
 !.env.example
+server/.env.docker
 
 # Logs
 logs/
