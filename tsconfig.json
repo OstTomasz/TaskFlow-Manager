@@ -6,6 +6,7 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./server/node_modules/@types"],
     "paths": {
       "@taskflow/shared": ["./shared/src/index.ts"],
       "@/*": ["./server/src/*"]
