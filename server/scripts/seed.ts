@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+
 import { env } from "../src/env";
 import { UserModel } from "../src/features/auth/auth.model";
 import { SALT_ROUNDS } from "../src/config/constants";
 
 const seed = async (): Promise<void> => {
-  await mongoose.connect(env.MONGO_URI, { appName: "TaskFlow-Seed" });
+  await mongoose.connect(env.MONGO_URI);
   console.log("[Seed] connected to MongoDB");
 
   await UserModel.deleteMany({});
@@ -14,17 +15,17 @@ const seed = async (): Promise<void> => {
   const seedUsers = [
     {
       name: "Alice",
-      avatar: "avatar-1",
+      avatar: "Av-1",
       password: await bcrypt.hash("pass1234", SALT_ROUNDS),
     },
     {
       name: "Bob",
-      avatar: "avatar-2",
+      avatar: "Av-3",
       password: "",
     },
     {
       name: "Carol",
-      avatar: "avatar-3",
+      avatar: "Av-4",
       password: await bcrypt.hash("pass1234", SALT_ROUNDS),
     },
   ];
@@ -39,5 +40,5 @@ const seed = async (): Promise<void> => {
 
 seed().catch((err) => {
   console.error("[Seed] failed:", err);
-  process.exit(1);
+  throw err;
 });

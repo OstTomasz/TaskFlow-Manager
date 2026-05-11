@@ -46,7 +46,7 @@ export const SettingsModal = ({ isOpen, handleClose }: SettingsProps) => {
         <DialogTitle className="text-center text-2xl font-bold">
           Settings
         </DialogTitle>
-        {user?.password ? (
+        {user?.hasPassword ? (
           <>
             {" "}
             <ChangePassForm

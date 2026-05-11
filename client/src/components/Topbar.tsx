@@ -10,7 +10,7 @@ export const Topbar = () => {
   const { pathname } = useLocation();
   const isLogged = pathname !== "/";
 
-  const logout = useLogout();
+  const { mutate: logout } = useLogout();
 
   const handleLogout = () => {
     logout();

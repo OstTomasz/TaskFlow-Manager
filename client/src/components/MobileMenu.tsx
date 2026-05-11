@@ -14,7 +14,7 @@ export const MobileMenu = ({
   handleClose,
   handleSettingsOpen,
 }: MobileMenuProps) => {
-  const logout = useLogout();
+  const { mutate: logout } = useLogout();
 
   const handleLogout = () => {
     logout();

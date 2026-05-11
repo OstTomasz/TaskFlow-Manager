@@ -1,24 +1,8 @@
 import type { CreateTodoValues, EditTodoValues, Todo } from "@taskflow/shared";
-import { MOCK_TODOS } from "./useTodos";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/features/auth/store/authStore";
+import { api } from "@/lib/axios";
 import { toast } from "sonner";
-
-export const addMockTodo = (todo: Todo) => {
-  MOCK_TODOS.push(todo);
-};
-export const updateMockTodo = (updated: Todo) => {
-  const index = MOCK_TODOS.findIndex((todo) => todo.id === updated.id);
-  if (index !== -1)
-    MOCK_TODOS[index] = {
-      ...updated,
-      lastModifiedDate: new Date().toISOString(),
-    };
-};
-export const deleteMockTodo = (id: string) => {
-  const index = MOCK_TODOS.findIndex((todo) => todo.id === id);
-  if (index !== -1) MOCK_TODOS.splice(index, 1);
-};
 
 export const useTodoMutations = () => {
   const { user } = useAuthStore();
@@ -26,19 +10,9 @@ export const useTodoMutations = () => {
   const queryClient = useQueryClient();
 
   const createTodo = useMutation({
-    mutationFn: (values: CreateTodoValues) => {
-      const date = new Date().toISOString();
-
-      const todo: Todo = {
-        id: crypto.randomUUID(),
-        userId,
-        creationDate: date,
-        lastModifiedDate: date,
-        completeDate: values.status === "done" ? date : undefined,
-        ...values,
-      };
-      addMockTodo(todo);
-      return Promise.resolve(todo);
+    mutationFn: async (values: CreateTodoValues): Promise<Todo> => {
+      const { data } = await api.post("/todos", values);
+      return data.data;
     },
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey: ["todos", userId] });
@@ -59,7 +33,7 @@ export const useTodoMutations = () => {
 
       return { previous };
     },
-    onError: (_err, _id, context) => {
+    onError: (_err, _values, context) => {
       queryClient.setQueryData(["todos", userId], context?.previous);
       toast.error("Failed to create task");
     },
@@ -70,19 +44,12 @@ export const useTodoMutations = () => {
   });
 
   const updateTodo = useMutation({
-    mutationFn: (values: { id: string } & EditTodoValues) => {
-      const existing = MOCK_TODOS.find((t) => t.id === values.id);
-      if (!existing) return Promise.reject(new Error("Todo not found"));
-
-      const todo: Todo = {
-        ...existing,
-        ...values,
-        lastModifiedDate: new Date().toISOString(),
-        completeDate:
-          values.status === "done" ? new Date().toISOString() : undefined,
-      };
-      updateMockTodo(todo);
-      return Promise.resolve(todo);
+    mutationFn: async (
+      values: { id: string } & EditTodoValues,
+    ): Promise<Todo> => {
+      const { id, ...rest } = values;
+      const { data } = await api.patch(`/todos/${id}`, rest);
+      return data.data;
     },
     onMutate: async (values) => {
       await queryClient.cancelQueries({ queryKey: ["todos", userId] });
@@ -100,7 +67,7 @@ export const useTodoMutations = () => {
 
       return { previous };
     },
-    onError: (_err, _id, context) => {
+    onError: (_err, _values, context) => {
       queryClient.setQueryData(["todos", userId], context?.previous);
       toast.error("Failed to update task");
     },
@@ -109,14 +76,12 @@ export const useTodoMutations = () => {
       if (todo) toast.success(`"${todo.title}" updated`);
     },
   });
+
   const deleteTodo = useMutation({
-    mutationFn: (id: string) => {
-      const exists = MOCK_TODOS.some((t) => t.id === id);
-      if (!exists) return Promise.reject(new Error("Todo not found"));
-      deleteMockTodo(id);
-      return Promise.resolve(id);
+    mutationFn: async (id: string): Promise<string> => {
+      await api.delete(`/todos/${id}`);
+      return id;
     },
-    // optimistic update
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey: ["todos", userId] });
       const previous = queryClient.getQueryData<Todo[]>(["todos", userId]);
@@ -124,7 +89,7 @@ export const useTodoMutations = () => {
         ["todos", userId],
         (old) => old?.filter((t) => t.id !== id) ?? [],
       );
-      return { previous }; // context for onError
+      return { previous };
     },
     onError: (_err, _id, context) => {
       queryClient.setQueryData(["todos", userId], context?.previous);

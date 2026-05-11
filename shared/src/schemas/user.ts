@@ -4,22 +4,26 @@ export const UserSchema = z.object({
   id: z.string(),
   name: z.string().min(2, "Name must be at least 2 characters"),
   avatar: z.string().min(1),
-  password: z.string().default(""),
+  password: z.string().default("").optional(),
+  hasPassword: z.boolean().optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;
 
 export const LoginSchema = z.object({
-  userId: z.string().min(1),
   password: z.string(),
 });
 export type Login = z.infer<typeof LoginSchema>;
 
+export const LoginRequestSchema = z.object({
+  userId: z.string().min(1),
+  password: z.string(),
+});
+export type LoginRequest = z.infer<typeof LoginRequestSchema>;
+
 export const ChangePasswordSchema = z
   .object({
-    currentPassword: z
-      .string()
-      .min(4, "Password must be at least 4 characters"),
+    currentPassword: z.string(),
     newPassword: z.string().min(4, "Password must be at least 4 characters"),
     confirmNewPassword: z.string(),
   })
@@ -30,7 +34,7 @@ export const ChangePasswordSchema = z
 
 export type ChangePassword = z.infer<typeof ChangePasswordSchema>;
 
-export const CreateUserSchema = UserSchema.omit({ id: true })
+export const CreateUserSchema = UserSchema.omit({ id: true, hasPassword: true })
   .extend({
     passwordProtected: z.boolean(),
     password: z.string(),
@@ -40,14 +44,14 @@ export const CreateUserSchema = UserSchema.omit({ id: true })
     if (data.passwordProtected) {
       if (!data.password || data.password.length < 4) {
         ctx.addIssue({
-          code: "custom",
+          code: z.ZodIssueCode.custom,
           message: "Password must be at least 4 characters",
           path: ["password"],
         });
       }
       if (data.password !== data.confirmPassword) {
         ctx.addIssue({
-          code: "custom",
+          code: z.ZodIssueCode.custom,
           message: "Passwords don't match",
           path: ["confirmPassword"],
         });

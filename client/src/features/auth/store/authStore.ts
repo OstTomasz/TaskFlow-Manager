@@ -4,7 +4,9 @@ import type { User } from "@taskflow/shared";
 
 interface AuthState {
   user: User | null;
-  setUser: (user: AuthState["user"]) => void;
+  accessToken: string | null;
+  setUser: (user: User | null, accessToken: string) => void;
+  setAccessToken: (token: string) => void;
   logout: () => void;
 }
 
@@ -12,8 +14,10 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      setUser: (u) => set({ user: u }),
-      logout: () => set({ user: null }),
+      accessToken: null,
+      setUser: (user, accessToken) => set({ user, accessToken }),
+      setAccessToken: (accessToken) => set({ accessToken }),
+      logout: () => set({ user: null, accessToken: null }),
     }),
     {
       name: "taskflow-auth",

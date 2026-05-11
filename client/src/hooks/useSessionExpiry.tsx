@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const SESSION_TIMEOUT = 10 * 60 * 1000;
-const WARNING_BEFORE = 9 * 60 * 1000;
+const INACTIVITY_BEFORE_WARNING = 9 * 60 * 1000;
 const EVENTS = ["click", "keydown", "scroll", "touchstart"] as const;
 
 export const useSessionExpiry = () => {
   const [showWarning, setShowWarning] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(WARNING_BEFORE / 1000);
+  const [secondsLeft, setSecondsLeft] = useState(
+    INACTIVITY_BEFORE_WARNING / 1000,
+  );
   const warningTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const logoutTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const countdownInterval = useRef<ReturnType<typeof setInterval>>(undefined);
@@ -23,7 +25,7 @@ export const useSessionExpiry = () => {
 
     warningTimer.current = setTimeout(() => {
       setShowWarning(true);
-      setSecondsLeft(WARNING_BEFORE / 1000);
+      setSecondsLeft(60);
 
       const interval = setInterval(() => {
         setSecondsLeft((prev) => {
@@ -36,7 +38,7 @@ export const useSessionExpiry = () => {
       }, 1000);
 
       countdownInterval.current = interval;
-    }, SESSION_TIMEOUT - WARNING_BEFORE);
+    }, INACTIVITY_BEFORE_WARNING);
 
     logoutTimer.current = setTimeout(() => {
       toast.error("Session expired");

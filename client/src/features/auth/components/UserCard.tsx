@@ -6,19 +6,18 @@ import { Loader } from "lucide-react";
 import { LoginSchema, type Login, type User } from "@taskflow/shared";
 import { avatars } from "@/constants";
 import { cn } from "@/lib/cn";
-import { useAuthStore } from "../store/authStore";
 import { toast } from "sonner";
+import { useLogin } from "../hooks/useLogin";
 
 export const UserCard = ({ user }: { user: User }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [shaking, setShaking] = useState(false);
-  const { setUser } = useAuthStore();
   const navigate = useNavigate();
-
+  const { mutate: login, isPending } = useLogin();
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setError,
   } = useForm<Login>({
     resolver: zodResolver(LoginSchema),
@@ -26,28 +25,38 @@ export const UserCard = ({ user }: { user: User }) => {
   });
 
   const handleUserClick = () => {
-    if (user.password === undefined) {
-      setUser(user);
-      toast.success(`Welcome, ${user.name}!`);
-      navigate("/todos");
+    if (!user.hasPassword) {
+      login(
+        { userId: user.id, password: "" },
+        {
+          onSuccess: () => {
+            toast.success(`Welcome, ${user.name}!`);
+            navigate("/todos");
+          },
+        },
+      );
     } else {
       setIsExpanded(true);
     }
   };
 
   const handleLogin = (data: Login) => {
-    if (data.password !== user.password) {
-      setError("password", { message: "Invalid password" });
-      setShaking(true);
-      return;
-    }
-    setUser(user);
-    toast.success(`Welcome, ${user.name}!`);
-    navigate("/todos");
+    login(
+      { userId: user.id, password: data?.password },
+      {
+        onSuccess: () => {
+          toast.success(`Welcome, ${user.name}!`);
+          navigate("/todos");
+        },
+        onError: () => {
+          setError("password", { message: "Invalid password" });
+          setShaking(true);
+        },
+      },
+    );
   };
 
   const avatarIcon = avatars.find((a) => a.id === user.avatar)?.icon;
-
   const passwordRef = useRef<HTMLInputElement>(null);
   const { ref, ...rest } = register("password");
 
@@ -109,9 +118,9 @@ export const UserCard = ({ user }: { user: User }) => {
         <button
           type="submit"
           className="comic-btn comic-btn-primary"
-          disabled={isSubmitting}
+          disabled={isPending}
         >
-          {isSubmitting ? (
+          {isPending ? (
             <>
               <Loader className="animate-spin" />
               <span>Logging..</span>

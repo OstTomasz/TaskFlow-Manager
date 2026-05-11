@@ -17,10 +17,15 @@ export const UserList = () => {
   if (isError) return <p>Cannot load users. Try reload page.</p>;
 
   return (
-    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-(--space-md) mx-7 my-(--space-md)">
-      {users.map((user) => {
-        return <UserCard key={user.id + pathname} user={user} />;
-      })}
-    </ul>
+    <>
+      <h2 className="text-2xl">
+        {users.length > 0 ? "Identify Yourself" : null}
+      </h2>
+      <ul className="max-w-3xl flex flex-wrap items-center justify-center gap-(--space-md) mx-auto my-(--space-md)">
+        {users.map((user) => (
+          <UserCard key={user.id + pathname} user={user} />
+        ))}
+      </ul>
+    </>
   );
 };

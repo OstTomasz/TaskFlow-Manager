@@ -13,7 +13,7 @@ import type { User } from "@taskflow/shared";
  * and Mongoose Document methods (_id, save, etc).
  * Omit<> removes 'id' — Mongo provides _id, we map it in toJSON.
  */
-export interface IUser extends Omit<User, "id">, Document {
+export interface IUser extends Omit<User, "id" | "hasPassword">, Document {
   refreshToken: string;
 }
 
@@ -42,12 +42,14 @@ type RawUserDoc = {
   updatedAt?: unknown;
   name: string;
   avatar: string;
+  hasPassword?: boolean;
 };
 
 UserSchema.set("toJSON", {
   transform(_doc, ret) {
     const raw = ret as unknown as RawUserDoc;
     raw.id = String(raw._id);
+    raw.hasPassword = Boolean(raw.password);
     delete raw._id;
     delete raw.__v;
     delete raw.password;

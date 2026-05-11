@@ -1,14 +1,12 @@
-import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
+
 import { Loader } from "lucide-react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { cn } from "@/lib/cn";
-import { addMockUser } from "@/features/auth/hooks/useUsers";
 import { CreateUserSchema, type CreateUser } from "@taskflow/shared";
+import { useRegister } from "@/features/auth/hooks/useRegister";
 import { avatars, type AvatarId } from "@/constants";
 import { AvatarsGallery } from "@/components";
-import { toast } from "sonner";
 
 interface CreateUserFormProps {
   onSuccess: (data: CreateUser) => Promise<void> | void;
@@ -42,25 +40,18 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
     defaultValue: false,
   });
 
-  const queryClient = useQueryClient();
+  const { mutateAsync: registerUser } = useRegister();
 
   const onSubmit = async (data: CreateUser) => {
-    addMockUser({
-      id: uuidv4(),
-      name: data.name,
-      avatar: data.avatar,
-      password: data.passwordProtected ? data.password : undefined,
-    });
-    queryClient.invalidateQueries({ queryKey: ["users"] });
-    toast.success(`User "${data.name}" created`);
+    await registerUser(data);
     await onSuccess(data);
     reset();
   };
-
+  const onError = (errors: unknown) => console.log("errors:", errors);
   return (
     <form
       className="mt-2 flex flex-col justify-center"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit, onError)}
     >
       <Controller
         name="avatar"

@@ -4,6 +4,7 @@ const SPRITE_URL = "/avatars-sprite.svg";
 
 export const avatars = [
   { id: "Av-1", icon: `${SPRITE_URL}#Avatar01` },
+  { id: "Av-2", icon: `${SPRITE_URL}#Avatar02` },
   { id: "Av-3", icon: `${SPRITE_URL}#Avatar03` },
   { id: "Av-4", icon: `${SPRITE_URL}#Avatar04` },
   { id: "Av-5", icon: `${SPRITE_URL}#Avatar05` },

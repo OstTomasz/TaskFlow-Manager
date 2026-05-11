@@ -6,7 +6,6 @@ export const HomePage = () => {
   return (
     <Layout>
       <div className="h-full flex flex-col justify-around items-center">
-        <h2 className="text-2xl">Identify Yourself</h2>
         <UserList />
         <CreateUser />
       </div>

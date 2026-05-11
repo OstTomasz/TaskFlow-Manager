@@ -1,71 +1,7 @@
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { useQuery } from "@tanstack/react-query";
 import type { Todo } from "@taskflow/shared";
-
-export const MOCK_TODOS: Todo[] = [
-  {
-    id: "1a2b3c4d-0000-0000-0000-000000000001",
-    title: "Set up monorepo structure",
-    description: "Configure pnpm workspaces, aliases and shared package.",
-    priority: "crucial",
-    status: "done",
-    creationDate: "2025-01-01T10:00:00.000Z",
-    lastModifiedDate: "2025-01-02T12:00:00.000Z",
-    completeDate: "2025-01-02T12:00:00.000Z",
-    userId: "user-1",
-  },
-  {
-    id: "1a2b3c4d-0000-0000-0000-000000000002",
-    title: "Build authentication flow",
-    description: "Inline login on UserCard with password shake animation.",
-    priority: "high",
-    status: "done",
-    creationDate: "2025-01-03T09:00:00.000Z",
-    lastModifiedDate: "2025-01-04T11:00:00.000Z",
-    completeDate: "2025-01-04T11:00:00.000Z",
-    userId: "user-1",
-  },
-  {
-    id: "1a2b3c4d-0000-0000-0000-000000000003",
-    title: "Implement TodoList with filters",
-    description: "Search, status and priority filters with sort support.",
-    priority: "high",
-    status: "in_progress",
-    creationDate: "2025-01-05T08:00:00.000Z",
-    lastModifiedDate: "2025-01-05T08:00:00.000Z",
-    userId: "user-1",
-  },
-  {
-    id: "1a2b3c4d-0000-0000-0000-000000000004",
-    title: "Add drag and drop to kanban",
-    priority: "low",
-    status: "todo",
-    creationDate: "2025-01-06T08:00:00.000Z",
-    lastModifiedDate: "2025-01-06T08:00:00.000Z",
-    userId: "user-1",
-  },
-  {
-    id: "1a2b3c4d-0000-0000-0000-000000000005",
-    title: "Write integration tests for API",
-    description: "Cover all CRUD endpoints with Vitest + supertest.",
-    priority: "medium",
-    status: "todo",
-    creationDate: "2025-01-07T08:00:00.000Z",
-    lastModifiedDate: "2025-01-07T08:00:00.000Z",
-    userId: "user-2",
-  },
-  {
-    id: "1a2b3c4d-0000-0000-0000-000000000006",
-    title: "Design comic style token system",
-    description: "2.5px borders, 3px hard shadows, Fredoka font setup.",
-    priority: "medium",
-    status: "in_progress",
-    creationDate: "2025-01-08T08:00:00.000Z",
-    lastModifiedDate: "2025-01-08T08:00:00.000Z",
-    badge: "design",
-    userId: "user-2",
-  },
-];
+import { api } from "@/lib/axios";
 
 /** Returns todos for the currently authenticated user. */
 export const useTodos = () => {
@@ -74,8 +10,11 @@ export const useTodos = () => {
 
   const query = useQuery({
     queryKey: ["todos", userId],
-    queryFn: () =>
-      Promise.resolve([...MOCK_TODOS].filter((todo) => todo.userId === userId)),
+    queryFn: async (): Promise<Todo[]> => {
+      const { data } = await api.get("/todos");
+      return data.data;
+    },
+    enabled: !!userId, // don't fetch if not logged in
     staleTime: 0,
   });
 

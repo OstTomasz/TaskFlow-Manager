@@ -1,9 +1,9 @@
 import type { Request, Response } from "express";
 import {
   CreateUserSchema,
-  LoginSchema,
   ChangePasswordSchema,
   DeleteUserSchema,
+  LoginRequestSchema,
 } from "@taskflow/shared";
 import {
   registerUser,
@@ -48,7 +48,7 @@ export const register = wrapAsync(async (req: Request, res: Response) => {
 });
 
 export const login = wrapAsync(async (req: Request, res: Response) => {
-  const parsed = LoginSchema.parse(req.body);
+  const parsed = LoginRequestSchema.parse(req.body);
   const { user, tokens } = await loginUser(parsed.userId, parsed.password);
 
   /**

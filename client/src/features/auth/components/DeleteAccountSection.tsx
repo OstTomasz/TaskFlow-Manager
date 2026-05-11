@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, ChevronUp, Loader } from "lucide-react";
-import { useDeleteUser } from "../hooks/useUsers";
 import { useAuthStore } from "../store/authStore";
 import { DeleteUserSchema, type DeleteUser } from "@taskflow/shared";
 import { cn } from "@/lib/cn";
+import { useDeleteUser } from "../hooks/useDeleteUser";
 
 interface DeleteAccountSectionProps {
   isExpanded: boolean;
@@ -25,15 +25,17 @@ export const DeleteAccountSection = ({
     formState: { errors, isSubmitting },
     setError,
   } = useForm<DeleteUser>({
-    resolver: user?.password ? zodResolver(DeleteUserSchema) : undefined,
-    mode: "onSubmit",
+    resolver: user?.hasPassword ? zodResolver(DeleteUserSchema) : undefined,
+    mode: "onBlur",
   });
 
   if (!user) return null;
 
   const onSubmit = async (data: DeleteUser) => {
     try {
-      await deleteUser.mutateAsync(user?.password ? data.password : undefined);
+      await deleteUser.mutateAsync(
+        user?.hasPassword ? data.password : undefined,
+      );
       reset();
     } catch {
       setError("password", { message: "Invalid password" });
@@ -76,7 +78,7 @@ export const DeleteAccountSection = ({
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col items-center justify-center"
           >
-            {user.password ? (
+            {user.hasPassword ? (
               <label>
                 <p>Provide password do confirm</p>
                 <input

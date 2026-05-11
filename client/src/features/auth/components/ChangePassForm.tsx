@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangePasswordSchema, type ChangePassword } from "@taskflow/shared";
 import { ChevronDown, ChevronUp, Loader } from "lucide-react";
+import { ChangePasswordSchema, type ChangePassword } from "@taskflow/shared";
 import { cn } from "@/lib/cn";
+import { useChangePassword } from "../hooks/useChangePassword";
 
 interface ChangePassFormProps {
   handleClose: () => void;
@@ -15,20 +16,25 @@ export const ChangePassForm = ({
   isExpanded,
   onToggle,
 }: ChangePassFormProps) => {
+  const { mutateAsync: changePassword } = useChangePassword();
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    setError,
+    formState: { errors, isSubmitting, isValid },
   } = useForm<ChangePassword>({
     resolver: zodResolver(ChangePasswordSchema),
-    mode: "onBlur",
+    mode: "all",
   });
-
-  const onSubmit = (data: ChangePassword) => {
-    console.log(data);
-    handleClose();
-    reset();
+  const onSubmit = async (data: ChangePassword) => {
+    try {
+      await changePassword(data);
+      handleClose();
+      reset();
+    } catch {
+      setError("currentPassword", { message: "Current password is incorrect" });
+    }
   };
 
   return (
@@ -87,7 +93,7 @@ export const ChangePassForm = ({
             <button
               type="submit"
               className="w-fit comic-btn comic-btn-primary mx-auto"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !isValid}
             >
               {isSubmitting ? (
                 <>
