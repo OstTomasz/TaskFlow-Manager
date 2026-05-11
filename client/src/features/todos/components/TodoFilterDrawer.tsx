@@ -9,7 +9,7 @@ export const TodoFilterDrawer = ({
   ...filterProps
 }: TodoFiltersProps) => {
   return (
-    <Dialog open={isOpen} onClose={handleClose}>
+    <Dialog open={isOpen ?? false} onClose={() => handleClose?.()}>
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-ink/30 backdrop-blur-sm transition duration-300 ease-in-out data-closed:opacity-0"

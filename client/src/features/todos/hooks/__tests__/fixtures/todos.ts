@@ -60,7 +60,6 @@ export const MOCK: Todo[] = [
     status: "in_progress",
     creationDate: "2025-01-08T08:00:00.000Z",
     lastModifiedDate: "2025-01-08T08:00:00.000Z",
-    badge: "design",
     userId: "user-2",
   },
 ];

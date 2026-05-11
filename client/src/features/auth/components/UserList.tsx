@@ -2,6 +2,7 @@ import { Loader } from "lucide-react";
 import { useUsers } from "../hooks/useUsers";
 import { UserCard } from "./UserCard";
 import { useLocation } from "react-router-dom";
+import type { User } from "@taskflow/shared";
 
 export const UserList = () => {
   const { users, isLoading, isError } = useUsers();
@@ -22,7 +23,7 @@ export const UserList = () => {
         {users.length > 0 ? "Identify Yourself" : null}
       </h2>
       <ul className="max-w-3xl flex flex-wrap items-center justify-center gap-(--space-md) mx-auto my-(--space-md)">
-        {users.map((user) => (
+        {users.map((user: User) => (
           <UserCard key={user.id + pathname} user={user} />
         ))}
       </ul>
