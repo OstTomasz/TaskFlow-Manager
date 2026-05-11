@@ -9,7 +9,6 @@ export const connectDB = async (): Promise<void> => {
 
   await mongoose.connect(env.MONGO_URI, {
     dbName: "taskflow",
-    appName: "TaskFlow",
   });
 
   console.log("[MongoDB] connected");

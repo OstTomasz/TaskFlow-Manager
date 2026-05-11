@@ -38,7 +38,7 @@
     "mongodb-memory-server": "^11.1.0",
     "supertest": "^7.0.0",
     "tsx": "^4.15.7",
-    "typescript": "~6.0.2",
+    "typescript": "~5.8.3",
     "vitest": "^1.6.0"
   }
 }
