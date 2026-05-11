@@ -1,15 +1,37 @@
+// client/src/features/todos/hooks/__tests__/useTodoMutations.test.tsx
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { Todo } from "@taskflow/shared";
 import { useTodoMutations } from "../useTodoMutations";
-import { MOCK_TODOS } from "../useTodos";
-import { MOCK } from "./fixtures/todos";
+import { resetTodos, mockTodos } from "@/test/server";
 
 vi.mock("@/features/auth/store/authStore", () => ({
   useAuthStore: () => ({
-    user: { id: "user-1", name: "User 1", avatar: "avatar-1" },
+    user: { id: "user-1", name: "User 1", avatar: "Av-1" },
   }),
 }));
+
+const SEED_TODOS: Todo[] = [
+  {
+    id: "todo-1",
+    title: "Set up monorepo structure",
+    priority: "crucial",
+    status: "todo",
+    creationDate: "2025-01-01T10:00:00.000Z",
+    lastModifiedDate: "2025-01-02T12:00:00.000Z",
+    userId: "user-1",
+  },
+  {
+    id: "todo-2",
+    title: "Build authentication flow",
+    priority: "high",
+    status: "todo",
+    creationDate: "2025-01-03T09:00:00.000Z",
+    lastModifiedDate: "2025-01-04T11:00:00.000Z",
+    userId: "user-1",
+  },
+];
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
@@ -20,83 +42,92 @@ const createWrapper = () => {
   );
 };
 
-let result: ReturnType<
-  typeof renderHook<ReturnType<typeof useTodoMutations>, unknown>
->["result"];
-
-beforeEach(() => {
-  MOCK_TODOS.length = 0;
-  MOCK_TODOS.push(...MOCK);
-  ({ result } = renderHook(() => useTodoMutations(), {
-    wrapper: createWrapper(),
-  }));
-});
-
 describe("useTodoMutations", () => {
+  beforeEach(() => resetTodos(SEED_TODOS));
+
   it("creates a new todo", async () => {
+    const { result } = renderHook(() => useTodoMutations(), {
+      wrapper: createWrapper(),
+    });
+
     await act(async () => {
-      result.current.createTodo.mutate({
-        title: "Test todo title here",
+      await result.current.createTodo.mutateAsync({
+        title: "This is a brand new todo",
         priority: "medium",
         status: "todo",
       });
     });
 
-    expect(MOCK_TODOS).toHaveLength(7);
-    expect(MOCK_TODOS.at(-1)?.title).toBe("Test todo title here");
-    expect(MOCK_TODOS.at(-1)?.status).toBe("todo");
-    expect(MOCK_TODOS.at(-1)?.userId).toBe("user-1");
+    expect(mockTodos).toHaveLength(3);
+    expect(mockTodos[0].title).toBe("This is a brand new todo");
   });
 
-  it("edit todo", async () => {
+  it("updates a todo", async () => {
+    const { result } = renderHook(() => useTodoMutations(), {
+      wrapper: createWrapper(),
+    });
+
     await act(async () => {
-      result.current.updateTodo.mutate({
-        id: "1a2b3c4d-0000-0000-0000-000000000001",
+      await result.current.updateTodo.mutateAsync({
+        id: "todo-1",
         title: "Updated todo title here",
-        priority: "medium",
+        priority: "low",
         status: "in_progress",
       });
     });
 
-    expect(MOCK_TODOS).toHaveLength(6);
-    expect(MOCK_TODOS[0].title).toBe("Updated todo title here");
-    expect(MOCK_TODOS[0].priority).toBe("medium");
-    expect(MOCK_TODOS[0].status).toBe("in_progress");
+    const updated = mockTodos.find((t) => t.id === "todo-1");
+    expect(updated?.title).toBe("Updated todo title here");
+    expect(updated?.status).toBe("in_progress");
   });
 
   it("fails when updating non-existent todo", async () => {
+    const { result } = renderHook(() => useTodoMutations(), {
+      wrapper: createWrapper(),
+    });
+
     await act(async () => {
       result.current.updateTodo.mutate({
-        id: "non-existent-id",
+        id: "non-existent",
         title: "Updated todo title here",
         priority: "medium",
-        status: "in_progress",
+        status: "todo",
       });
     });
 
     await waitFor(() => {
       expect(result.current.updateTodo.isError).toBe(true);
     });
-    expect(MOCK_TODOS).toHaveLength(6);
+
+    expect(mockTodos).toHaveLength(2);
   });
 
-  it("delete todo", async () => {
-    await act(async () => {
-      result.current.deleteTodo.mutate("1a2b3c4d-0000-0000-0000-000000000001");
+  it("deletes a todo", async () => {
+    const { result } = renderHook(() => useTodoMutations(), {
+      wrapper: createWrapper(),
     });
 
-    expect(MOCK_TODOS).toHaveLength(5);
-    expect(MOCK_TODOS[0].title).toBe("Build authentication flow");
+    await act(async () => {
+      await result.current.deleteTodo.mutateAsync("todo-1");
+    });
+
+    expect(mockTodos).toHaveLength(1);
+    expect(mockTodos[0].id).toBe("todo-2");
   });
 
   it("fails when deleting non-existent todo", async () => {
+    const { result } = renderHook(() => useTodoMutations(), {
+      wrapper: createWrapper(),
+    });
+
     await act(async () => {
-      result.current.deleteTodo.mutate("non-existent-id");
+      result.current.deleteTodo.mutate("non-existent");
     });
 
     await waitFor(() => {
       expect(result.current.deleteTodo.isError).toBe(true);
     });
-    expect(MOCK_TODOS).toHaveLength(6);
+
+    expect(mockTodos).toHaveLength(2);
   });
 });

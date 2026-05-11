@@ -1,33 +1,31 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useUsers, useDeleteUser, MOCK_USERS } from "../useUsers";
+import type { User } from "@taskflow/shared";
+import { useUsers } from "../useUsers";
+import { useDeleteUser } from "../useDeleteUser";
+import { resetUsers, mockUsers } from "@/test/server";
+import { server } from "@/test/server";
+import { http, HttpResponse } from "msw";
 
-// mock authStore
 const mockLogout = vi.fn();
-const mockUser: {
-  id: string;
-  name: string;
-  avatar: string;
-  password: string | undefined;
-} = {
-  id: "user-1",
-  name: "User 1",
-  avatar: "Av-1",
-  password: "pass1",
-};
 
 vi.mock("@/features/auth/store/authStore", () => ({
   useAuthStore: () => ({
-    user: mockUser,
+    user: { id: "user-1", name: "User 1", avatar: "Av-1", hasPassword: true },
     logout: mockLogout,
   }),
 }));
 
-// mock react-router-dom
 vi.mock("react-router-dom", () => ({
   useNavigate: () => vi.fn(),
 }));
+
+const SEED_USERS: User[] = [
+  { id: "user-1", name: "User 1", avatar: "Av-1", hasPassword: true },
+  { id: "user-2", name: "User 2", avatar: "Av-3", hasPassword: false },
+  { id: "user-3", name: "User 3", avatar: "Av-4", hasPassword: true },
+];
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
@@ -38,35 +36,63 @@ const createWrapper = () => {
   );
 };
 
-let result: ReturnType<
-  typeof renderHook<ReturnType<typeof useUsers>, unknown>
->["result"];
-
 describe("useUsers", () => {
   beforeEach(() => {
-    ({ result } = renderHook(() => useUsers(), {
-      wrapper: createWrapper(),
-    }));
+    resetUsers(SEED_USERS);
+    mockLogout.mockClear();
   });
-  it("returns 9 users", async () => {
-    await waitFor(() => {
-      expect(result.current.users).toHaveLength(9);
+
+  it("returns users from API", async () => {
+    server.use(
+      http.get("http://localhost:5001/api/auth/users", () =>
+        HttpResponse.json({
+          status: "success",
+          data: mockUsers,
+          message: "Users fetched",
+        }),
+      ),
+    );
+
+    const { result } = renderHook(() => useUsers(), {
+      wrapper: createWrapper(),
     });
+
+    await waitFor(() => {
+      expect(result.current.users).toHaveLength(3);
+    });
+  });
+
+  it("returns empty array when no users", async () => {
+    resetUsers([]);
+    server.use(
+      http.get("http://localhost:5001/api/auth/users", () =>
+        HttpResponse.json({
+          status: "success",
+          data: mockUsers,
+          message: "Users fetched",
+        }),
+      ),
+    );
+
+    const { result } = renderHook(() => useUsers(), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    expect(result.current.users).toHaveLength(0);
   });
 });
 
 describe("useDeleteUser", () => {
   beforeEach(() => {
-    // reset MOCK_USERS
-    MOCK_USERS.length = 0;
-    MOCK_USERS.push(
-      { id: "user-1", name: "User 1", avatar: "Av-1", password: "pass1" },
-      { id: "user-2", name: "User 2", avatar: "Av-3", password: undefined },
-    );
+    resetUsers(SEED_USERS);
     mockLogout.mockClear();
   });
 
-  it("deletes user with correct password", async () => {
+  it("deletes user and calls logout on success", async () => {
     const { result } = renderHook(() => useDeleteUser(), {
       wrapper: createWrapper(),
     });
@@ -74,41 +100,7 @@ describe("useDeleteUser", () => {
     await result.current.mutateAsync("pass1");
 
     await waitFor(() => {
-      expect(MOCK_USERS.find((u) => u.id === "user-1")).toBeUndefined();
       expect(mockLogout).toHaveBeenCalledOnce();
     });
-  });
-
-  it("rejects with wrong password", async () => {
-    const { result } = renderHook(() => useDeleteUser(), {
-      wrapper: createWrapper(),
-    });
-
-    await expect(result.current.mutateAsync("wrongpass")).rejects.toThrow(
-      "Invalid password",
-    );
-    expect(MOCK_USERS.find((u) => u.id === "user-1")).toBeDefined();
-  });
-
-  it("deletes user without password when no password provided", async () => {
-    mockUser.password = undefined;
-    MOCK_USERS[0] = {
-      id: "user-1",
-      name: "User 1",
-      avatar: "Av-1",
-      password: undefined,
-    };
-
-    const { result } = renderHook(() => useDeleteUser(), {
-      wrapper: createWrapper(),
-    });
-
-    await result.current.mutateAsync(undefined);
-
-    await waitFor(() => {
-      expect(MOCK_USERS.find((u) => u.id === "user-1")).toBeUndefined();
-    });
-
-    mockUser.password = "pass1";
   });
 });

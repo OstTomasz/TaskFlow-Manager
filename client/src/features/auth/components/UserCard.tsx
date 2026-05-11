@@ -8,8 +8,10 @@ import { avatars } from "@/constants";
 import { cn } from "@/lib/cn";
 import { toast } from "sonner";
 import { useLogin } from "../hooks/useLogin";
+import { useAuthStore } from "../store/authStore";
 
 export const UserCard = ({ user }: { user: User }) => {
+  const { setIsNavigating } = useAuthStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [shaking, setShaking] = useState(false);
   const navigate = useNavigate();
@@ -24,6 +26,18 @@ export const UserCard = ({ user }: { user: User }) => {
     mode: "onSubmit",
   });
 
+  /**
+   * Delays navigation to allow exit animation to play.
+   * 600ms matches the CSS transition duration on UserList.
+   */
+  const navigateWithDelay = () => {
+    setIsNavigating(true);
+    setTimeout(() => {
+      setIsNavigating(false);
+      navigate("/todos");
+    }, 700);
+  };
+
   const handleUserClick = () => {
     if (!user.hasPassword) {
       login(
@@ -31,7 +45,7 @@ export const UserCard = ({ user }: { user: User }) => {
         {
           onSuccess: () => {
             toast.success(`Welcome, ${user.name}!`);
-            navigate("/todos");
+            navigateWithDelay();
           },
         },
       );
@@ -46,7 +60,7 @@ export const UserCard = ({ user }: { user: User }) => {
       {
         onSuccess: () => {
           toast.success(`Welcome, ${user.name}!`);
-          navigate("/todos");
+          navigateWithDelay();
         },
         onError: () => {
           setError("password", { message: "Invalid password" });

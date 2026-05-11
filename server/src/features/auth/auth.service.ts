@@ -64,7 +64,7 @@ export const loginUser = async (userId: string, password: string) => {
   const user = await UserModel.findById(userId);
   if (!user) throw new AppError("User not found", 404);
 
-  const valid = await verifyPassword(password, user.password);
+  const valid = await verifyPassword(password, user.password ?? "");
   if (!valid) throw new AppError("Invalid password", 401);
 
   const tokens = issueTokens(user);
@@ -127,7 +127,7 @@ export const changePassword = async (
   const user = await UserModel.findById(userId);
   if (!user) throw new AppError("User not found", 404);
 
-  const valid = await verifyPassword(currentPassword, user.password);
+  const valid = await verifyPassword(currentPassword, user.password ?? "");
   if (!valid) throw new AppError("Current password is incorrect", 401);
 
   user.password = await hashPassword(newPassword);

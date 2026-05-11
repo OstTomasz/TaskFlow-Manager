@@ -9,6 +9,7 @@ export const useUsers = () => {
       const { data } = await api.get("/auth/users");
       return data.data;
     },
+
     staleTime: 1000 * 60 * 5, // 5min — user list changes rarely
   });
 
