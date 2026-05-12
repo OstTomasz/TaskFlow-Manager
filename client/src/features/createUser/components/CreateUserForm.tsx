@@ -47,11 +47,10 @@ export const CreateUserForm = ({ onSuccess }: CreateUserFormProps) => {
     await onSuccess(data);
     reset();
   };
-  const onError = (errors: unknown) => console.log("errors:", errors);
   return (
     <form
       className="mt-2 flex flex-col justify-center"
-      onSubmit={handleSubmit(onSubmit, onError)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Controller
         name="avatar"

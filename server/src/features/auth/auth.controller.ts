@@ -113,6 +113,6 @@ export const removeUser = wrapAsync(async (req: Request, res: Response) => {
   if (!req.user) throw new AppError("Unauthorized", 401);
   const parsed = DeleteUserSchema.parse(req.body);
   await deleteUser(req.user.userId, parsed.password);
-  res.clearCookie("refreshToken", REFRESH_COOKIE_OPTIONS);
+  res.clearCookie("refreshToken", REFRESH_COOKIE_BASE);
   res.json({ status: "success", data: null, message: "User deleted" });
 });

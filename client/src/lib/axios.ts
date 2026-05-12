@@ -1,13 +1,33 @@
-import axios, { type AxiosError } from "axios";
+import axios, {
+  AxiosHeaders,
+  type AxiosError,
+  type AxiosResponse,
+  type InternalAxiosRequestConfig,
+} from "axios";
 import { useAuthStore } from "@/features/auth/store/authStore";
 
-const SKIP_REFRESH_URLS = [
+declare module "axios" {
+  export interface InternalAxiosRequestConfig {
+    /** After one refresh cycle, suppress further refresh attempts (avoid loop on credential 401s). */
+    _retryAfterRefresh?: boolean;
+  }
+}
+
+/** Only routes where 401 should never trigger /auth/refresh (exact pathname match). */
+const SKIP_REFRESH_PATHS = new Set([
   "/auth/login",
   "/auth/refresh",
   "/auth/logout",
-  "/auth/password",
-  "/auth/user",
-];
+]);
+
+const normalizeRequestPath = (rawUrl: string): string => {
+  const pathOnly = rawUrl.split("?")[0];
+  if (!pathOnly) return "";
+  if (/^https?:\/\//i.test(pathOnly)) {
+    return new URL(pathOnly).pathname;
+  }
+  return pathOnly.startsWith("/") ? pathOnly : `/${pathOnly}`;
+};
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:5001/api",
@@ -35,15 +55,35 @@ api.interceptors.request.use((config) => {
  * 5. If refresh fails → logout (session truly expired)
  */
 let isRefreshing = false;
-let refreshQueue: Array<(token: string) => void> = [];
 
-/**
- * Processes queued requests after token refresh.
- * Multiple simultaneous 401s → only one /refresh call, rest wait in queue.
- */
-const processQueue = (token: string) => {
-  refreshQueue.forEach((resolve) => resolve(token));
+interface QueuedRequest {
+  readonly config: InternalAxiosRequestConfig;
+  resolve: (value: AxiosResponse) => void;
+  reject: (reason?: unknown) => void;
+}
+
+let refreshQueue: QueuedRequest[] = [];
+
+const settleQueuedRequestsSuccess = (token: string): void => {
+  const queued = [...refreshQueue];
   refreshQueue = [];
+  queued.forEach(({ config, resolve, reject }) => {
+    const headers =
+      config.headers instanceof AxiosHeaders
+        ? config.headers
+        : AxiosHeaders.from(config.headers);
+    config.headers = headers;
+    headers.set("Authorization", `Bearer ${token}`);
+    api(config).then(resolve).catch(reject);
+  });
+};
+
+const settleQueuedRequestsFailure = (reason: AxiosError): void => {
+  const queued = [...refreshQueue];
+  refreshQueue = [];
+  queued.forEach(({ reject }) => {
+    reject(reason);
+  });
 };
 
 api.interceptors.response.use(
@@ -55,29 +95,27 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const shouldSkip = SKIP_REFRESH_URLS.some((url) =>
-      original.url?.includes(url),
-    );
-    if (shouldSkip) {
+    const path = normalizeRequestPath(original.url ?? "");
+    if (SKIP_REFRESH_PATHS.has(path)) {
       return Promise.reject(error);
     }
 
-    // Avoid infinite loop if /refresh itself returns 401
-    if (original.url?.includes("/auth/refresh")) {
-      useAuthStore.getState().logout();
+    /** Second 401 after a refresh+retry cycle — do not logout (e.g. wrong password). */
+    if (original._retryAfterRefresh) {
       return Promise.reject(error);
     }
+
+    original._retryAfterRefresh = true;
+
+    const originalHeaders =
+      original.headers instanceof AxiosHeaders
+        ? original.headers
+        : AxiosHeaders.from(original.headers);
+    original.headers = originalHeaders;
 
     if (isRefreshing) {
-      /**
-       * Another request already triggered refresh.
-       * Queue this request — resolve it when new token arrives.
-       */
-      return new Promise((resolve) => {
-        refreshQueue.push((token: string) => {
-          original.headers.Authorization = `Bearer ${token}`;
-          resolve(api(original));
-        });
+      return new Promise<AxiosResponse>((resolve, reject) => {
+        refreshQueue.push({ config: original, resolve, reject });
       });
     }
 
@@ -88,12 +126,13 @@ api.interceptors.response.use(
       const newToken: string = data.data.accessToken;
 
       useAuthStore.getState().setAccessToken(newToken);
-      processQueue(newToken);
+      settleQueuedRequestsSuccess(newToken);
 
-      original.headers.Authorization = `Bearer ${newToken}`;
+      originalHeaders.set("Authorization", `Bearer ${newToken}`);
       return api(original);
     } catch {
       useAuthStore.getState().logout();
+      settleQueuedRequestsFailure(error);
       return Promise.reject(error);
     } finally {
       isRefreshing = false;
