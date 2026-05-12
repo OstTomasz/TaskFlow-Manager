@@ -14,9 +14,9 @@ import {
   changePassword,
   deleteUser,
 } from "./auth.service";
-import { wrapAsync } from "@/utils/wrapAsync";
-import { AppError } from "@/utils/appError";
-import { verifyRefreshToken } from "@/lib/jwt";
+import { wrapAsync } from "../../utils/wrapAsync";
+import { AppError } from "../../utils/appError";
+import { verifyRefreshToken } from "../../lib/jwt";
 
 /** Cookie config — httpOnly prevents JS access (XSS protection). */
 const REFRESH_COOKIE_BASE = {

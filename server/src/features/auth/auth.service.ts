@@ -4,9 +4,9 @@ import {
   signAccessToken,
   signRefreshToken,
   verifyRefreshToken,
-} from "@/lib/jwt";
-import { AppError } from "@/utils/appError";
-import { SALT_ROUNDS } from "@/config/constants";
+} from "../../lib/jwt";
+import { AppError } from "../../utils/appError";
+import { SALT_ROUNDS } from "../../config/constants";
 import { deleteUserTodos } from "../todos/todos.service";
 
 /**

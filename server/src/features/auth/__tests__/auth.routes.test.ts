@@ -1,7 +1,7 @@
 import request from "supertest";
 import { describe, it, expect } from "vitest";
-import { app } from "@/app";
-import { UserModel } from "@/features/auth/auth.model";
+import { app } from "../../../app";
+import { UserModel } from "../auth.model";
 import { createUser, loginAs } from "./helpers";
 
 // ---------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticate } from "@/middleware/authenticate";
+import { authenticate } from "../../middleware/authenticate";
 import { getTodos, addTodo, editTodo, removeTodo } from "./todos.controller";
 
 export const todosRouter = Router();

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 import { randomUUID } from "crypto";
-import { env } from "@/env";
+import { env } from "../env";
 
 /**
  * Shape of the JWT payload for access tokens.

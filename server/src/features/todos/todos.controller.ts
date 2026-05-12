@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { wrapAsync } from "@/utils/wrapAsync";
-import { AppError } from "@/utils/appError";
+import { wrapAsync } from "../../utils/wrapAsync";
+import { AppError } from "../../utils/appError";
 import { CreateTodoSchema, EditTodoSchema } from "@taskflow/shared";
 import {
   getUserTodos,

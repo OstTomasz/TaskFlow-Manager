@@ -1,8 +1,8 @@
 import request from "supertest";
 import { describe, it, expect } from "vitest";
-import { app } from "@/app";
-import { TodoModel } from "@/features/todos/todos.model";
-import { createUser, loginAs } from "@/features/auth/__tests__/helpers";
+import { app } from "../../../app";
+import { TodoModel } from "../todos.model";
+import { createUser, loginAs } from "../../auth/__tests__/helpers";
 import { createTodo } from "./helpers";
 
 // GET /api/todos

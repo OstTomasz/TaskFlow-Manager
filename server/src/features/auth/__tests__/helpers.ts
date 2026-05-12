@@ -1,8 +1,8 @@
 import request from "supertest";
 import bcrypt from "bcryptjs";
-import { app } from "@/app";
-import { UserModel } from "@/features/auth/auth.model";
-import { SALT_ROUNDS } from "@/config/constants";
+import { app } from "../../../app";
+import { UserModel } from "../auth.model";
+import { SALT_ROUNDS } from "../../../config/constants";
 
 //--------------- Auth routes ---------------//
 /**

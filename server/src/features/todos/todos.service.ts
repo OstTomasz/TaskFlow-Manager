@@ -1,5 +1,5 @@
 import { TodoModel, type ITodo } from "./todos.model";
-import { AppError } from "@/utils/appError";
+import { AppError } from "../../utils/appError";
 import type { CreateTodoValues, EditTodoValues } from "@taskflow/shared";
 
 /**
