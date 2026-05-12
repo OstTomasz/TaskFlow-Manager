@@ -1,0 +1,10 @@
+{
+  "extends": "../server/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "../server",
+    "paths": {
+      "@taskflow/shared": ["../shared/src/index.ts"]
+    }
+  },
+  "include": ["../server/src/**/*", "./index.ts"]
+}

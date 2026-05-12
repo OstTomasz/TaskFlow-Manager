@@ -1,8 +1,8 @@
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { connectDB } from "../server/src/lib/mongoose";
 import { app } from "../server/src/app";
-import type { Request, Response } from "express";
 
-export default async function handler(req: Request, res: Response) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   await connectDB();
-  app(req, res);
+  return app(req, res);
 }

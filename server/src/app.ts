@@ -38,7 +38,6 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "success", data: { ok: true }, message: "Server alive" });
 });
 
-// TODO: mount feature routers here
 app.use("/api/auth", authRouter);
 app.use("/api/todos", todosRouter);
 
