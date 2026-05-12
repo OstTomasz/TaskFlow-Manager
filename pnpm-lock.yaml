@@ -229,13 +229,14 @@ importers:
         version: 1.6.1(@edge-runtime/vm@3.2.0)(@types/node@20.19.40)(jsdom@29.1.1(@noble/hashes@1.8.0))(lightningcss@1.32.0)
 
   shared:
-    devDependencies:
-      typescript:
-        specifier: ~6.0.2
-        version: 6.0.3
+    dependencies:
       zod:
         specifier: ^4.4.1
         version: 4.4.1
+    devDependencies:
+      typescript:
+        specifier: ~5.8.3
+        version: 5.8.3
 
 packages:
 

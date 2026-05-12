@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
-    "vercel-build": "tsc -b && vite build"
+    "vercel-build": "pnpm --filter @taskflow/shared build && tsc -b && vite build"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.10",
